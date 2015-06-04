@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+{% block jumbotron %}
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Online course repository!</h1>
+        <p>Welcome to online course repository. You can find all your courses here at one place. Login and get
+        	enrolled in a course to get access to full features. Features include online assignments, lecture
+        	notes, live discussion,class notice etc.</br>
+        	Start Learning now</p>
+      </div>
+    </div>
+    <hr>
+{% endblock %}
+{% block logo %}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+        	<img src="{{ STATIC_URL }}images/demologo.jpg">
+        </div>
+        <div class="col-md-8">
+        	<h2>
+        	</br>
+        	</br>
+        		College motto goes here!!
+        	</h2>
+        </div>
+      </div>
+    </div>
+    <hr>
+{% endblock %}
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row" id="register">
+        <div class="col-md-6">
+          <h2>What Students can do?</h2>
+          <p>Submit assignments online for the courses enrolled.See deadlines for coursework.Get notfified about new course materials.
+          	Meet fellow students and professors on discussion forum and ask doubts online etc. </p>
+          	<p><a class="btn btn-default" href='{% url "register_student" %}' role="button">Register as Student &raquo;</a></p>
+        </div>
+        <div class="col-md-6">
+          <h2>What Professors can do?</h2>
+          <p>Upload an assignment and give deadlines for their courses.Attach a notice in a class.See students doubts in
+          	discussion forum.Upload lecture notes. Display marks of students.</p>
+          	<p><a class="btn btn-default" href='{% url "register_professor" %}' role="button">Register as Professor &raquo;</a></p>
+        </div>
+      </div>
+    </div>
+    <hr>
+{% endblock %}
+
+
+
+
+

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{ STATIC_URL }}images/repologo.png">
+    <script src="{{ STATIC_URL }}js/jquery-1.11.1.min.js"></script>
+    <title>Online repository</title>
+    <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/navbar-fixed-top.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
+ 	<style>
+ 		body {
+ 			min-height: 1100px;
+ 		}
+ 		.navbar-static-top: {
+ 			margin-bottom: 19px;
+ 		}
+ 	</style>
+  <style type="text/css">
+      body { background: #FFFFFF ; }
+  </style>
+  <script src="{{ STATIC_URL }}js/ie-emulation-modes-warning.js"></script>
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href='{% url "home" %}'>Online Repository XYZ college</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <div class="navbar-form navbar-right">
+            <a class="btn btn-md btn-success" href='{% url "login" %}' role="button">Login</a>
+            <a class="btn btn-md btn-success" href="/#register" role="button">Register</a>
+          </div>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+    </div> 
+
+    <div class="container">
+      <div id='notificationsLoader'></div>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {% if 'error' in message.tags %}alert-danger{% elif 'warning' in message.tags %}alert-warning
+          {%else %}alert-success{% endif %}" role="alert">{% if 'safe' in message.tags %}{{ message|safe }}{% else %} {{ message }}{% endif %}
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}
+      {% endblock %}
+    </div>
+
+
+
+    <footer class="footer">
+      <div class="container">
+        <h4 class="copyright">Copyright 2015
+      </br><a href="#" data-toggle="modal" data-target="#credits">Credits</a></h4>
+        <h4 class="contact"><a href="#" data-toggle="modal" data-target="#contactus">Contact us</a>
+        </br><a href="#" data-toggle="modal" data-target="#aboutus">About Us</a></h4>
+        <h4 class="social"><a href="#">Github</a></h4>
+      </div>
+    </footer>
+    <div class="modal fade" id="aboutus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">About us</h4>
+        </div>
+        <div class="modal-body">
+          <p>With this web app we are trying erase classroom boundaries so that students and professors are
+            connected all the time 24X7. Accessing of all classroom materials will become easy and students
+            can find all materials of class well organized at one place.
+          </p>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="modal fade" id="credits" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">credits</h4>
+        </div>
+        <div class="modal-body">
+          <p>This site is powered by bootstrap and python(django).Thanks to </br>
+            xyz college</br>
+            students </br>
+            teachers </br>
+            non teaching staff </br>
+          </p>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="modal fade" id="contactus" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">contact us</h4>
+        </div>
+        <div class="modal-body">
+          <p>You can contact us through email at emailgoeshere@abcd.com</br>
+            Help us improve this site by suggesting changes, feature addtion, finding bugs etc
+          </p>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+      </div>
+    </div>
+
+
+    <div id="loading" style="display: none; text-align:center;">
+      <img src="{{ STATIC_URL }}images/loading.gif" />
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+    <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
