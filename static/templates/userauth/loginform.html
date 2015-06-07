@@ -1,11 +1,13 @@
 {% extends "base.html" %}
-{% load bootstrap_toolkit %}
+{% load crispy_forms_tags %}
 {% block content %}
-<form method='POST' action=''> {% csrf_token %}
-	{{ form|as_bootstrap }}
-	<div class="form-actions">
-        <button type="submit" class="btn btn-primary">Login</button>
-    </div>
-</form>
+<div class="col-sm-6 col-sm-offset-3">
+	<form method='POST' action=''> {% csrf_token %}
+		{{ form|crispy }}
+		<div class="form-actions">
+	        <button type="submit" class="btn btn-primary">Login</button>
+	    </div>
+	</form>
+</div>
 {% endblock %}
 

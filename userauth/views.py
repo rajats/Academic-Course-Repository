@@ -17,7 +17,7 @@ def signin(request):
 		if user is not None:
 			login(request, user)
 			#return HttpResponseRedirect('//')
-			return render_to_response("home.html", locals(), context_instance=RequestContext(request))
+			return render(request, "home.html", locals())
 		else:
 			messages.error(request, 'username or password does not match')
 	context = {'form': form}
@@ -30,14 +30,14 @@ def register_student(request):
 		username = form.cleaned_data['username']
 		email = form.cleaned_data['email']
 		password = form.cleaned_data['password']
-		branch = form.cleaned_data['branch']
 		programme = form.cleaned_data['programme']
 		enroll_no = form.cleaned_data['enroll_no']
+		semester = form.cleaned_data['semester']
 		new_user, created = User.objects.get_or_create(username = username, email = email)
 		if created:
 			new_user.password = password
 			new_user.save()
-			new_student.send(new_user, branch=branch, programme=programme, enroll_no=enroll_no)
+			new_student.send(new_user, programme=programme, enroll_no=enroll_no, semester=semester)
 			messages.success(request, 'Your account has been registered!')
 			return HttpResponseRedirect('/userauth/login/')
 	context = {'form': form}
@@ -49,12 +49,11 @@ def register_professor(request):
 		username = form.cleaned_data['username']
 		email = form.cleaned_data['email']
 		password = form.cleaned_data['password']
-		branch = form.cleaned_data['branch']
 		new_user, created = User.objects.get_or_create(username = username, email = email)
 		if created:
 			new_user.password = password
 			new_user.save()
-			new_student.send(new_user, branch=branch)
+			new_professor.send(new_user)
 			messages.success(request, 'Your account has been registered!')
 			return HttpResponseRedirect('/userauth/login/')
 	context = {'form': form}

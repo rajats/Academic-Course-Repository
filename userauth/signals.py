@@ -1,4 +1,4 @@
 from django.dispatch import Signal
 
-new_student = Signal(providing_args=['branch','programme','enroll_no'])
-new_professor = Signal(providing_args=['branch',])
+new_student = Signal(providing_args=['programme','enroll_no','semester'])
+new_professor = Signal(providing_args=[])
