@@ -7,7 +7,7 @@ from .signals import new_student, new_professor
 class RegStudent(models.Model):
 	user = models.ForeignKey(User)
 	programme = models.CharField(max_length=50)
-	enroll_no = models.IntegerField(validators=[MinValueValidator(100000),MaxValueValidator(199999)]) 
+	enroll_no = models.CharField(max_length=50)
 	semester = models.IntegerField(default=1)   
 	active = models.BooleanField(default=False)
 

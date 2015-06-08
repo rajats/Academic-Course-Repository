@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="col-sm-8 col-sm-offset-2">
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">Courses available</h3>
+		  </div>
+		  <div class="panel-body">
+		  	{% for course in unenrolled_courses %}
+		  		<p>{{ course.show_name_type }}
+		  			<a class="btn btn-md btn-success pull-right" href='{% url "enroll" course.id %}' role="button">Enroll</a>
+		  		</p>
+		  		<hr>
+		  	{% endfor %}
+		  </div>
+		</div>
+	</div>
+{% endblock %}
+

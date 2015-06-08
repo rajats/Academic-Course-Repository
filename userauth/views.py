@@ -3,7 +3,9 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 
+from student.signals import new_student_course
 from .forms import LoginForm, RegistrationFormStudent, RegistrationFormProfessor
+from .models import RegStudent
 from .signals import new_student, new_professor
 
 User = get_user_model()
@@ -38,6 +40,8 @@ def register_student(request):
 			new_user.password = password
 			new_user.save()
 			new_student.send(new_user, programme=programme, enroll_no=enroll_no, semester=semester)
+			student = RegStudent.objects.get(user=new_user)
+			new_student_course.send(new_user,student=student)
 			messages.success(request, 'Your account has been registered!')
 			return HttpResponseRedirect('/userauth/login/')
 	context = {'form': form}

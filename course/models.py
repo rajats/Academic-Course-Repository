@@ -22,3 +22,6 @@ class Course(models.Model):
 
 	def __unicode__(self):
 		return '%s of semester %s and programme %s' % (self.name,self.semester,self.get_programme_display())
+
+	def show_name_type(self):
+		return '%s (type %s)' % (self.name,self.get_course_type_display())

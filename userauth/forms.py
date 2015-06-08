@@ -24,7 +24,7 @@ class RegistrationFormStudent(forms.Form):
 		(6,'M. Tech in Computer Science and Engineering (Information Security)'),\
 		(7,'General MBA with specialization in Human Resources, Marketing and Finance'),\
 		(8,'MBA in ITES'),(9,'MBA in Public Service Management and e-Governance')])
-	enroll_no = forms.IntegerField() 
+	enroll_no = forms.CharField() 
 	semester = forms.IntegerField()   
 
 	def clean_username(self):
@@ -40,6 +40,12 @@ class RegistrationFormStudent(forms.Form):
 		if email.find('@iiitm.ac.in') == -1:
 			raise forms.ValidationError("email must be of iiitm")
 		return email
+
+	def clean_enroll_no(self):
+		enroll_no = self.cleaned_data['enroll_no']
+		if enroll_no.find('ipg') == -1:
+			raise forms.ValidationError("invalid roll number")
+		return enroll_no
 
 	def clean(self):
 		cleaned_data = super(RegistrationFormStudent,self).clean()
