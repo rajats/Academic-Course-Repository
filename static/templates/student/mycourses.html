@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="col-sm-8 col-sm-offset-2">
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">My enrolled courses</h3>
+		  </div>
+		  <div class="panel-body">
+		  	{% if my_enrolled_courses %}
+			  	{% for course in my_enrolled_courses %}
+			  		<p>{{ course.show_name_type }}
+			  			<a class="btn btn-md btn-success pull-right" href='#' role="button">View Course</a>
+			  		</p>
+			  		<hr>
+			  	{% endfor %}
+			{% else %}
+				<div class="alert alert-info" role="alert">No enrolled courses</div>
+			{% endif %}
+		  </div>
+		</div>
+	</div>
+{% endblock %}
+

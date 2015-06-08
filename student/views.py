@@ -24,7 +24,27 @@ def show_courses(request):
 			courses = None
 		return render_to_response("student/enroll.html", locals(), context_instance=RequestContext(request))
 	else:
-		raise Http404
+		messages.error(request, 'Your account is not active yet, please conatct admin.')
+		return render_to_response("student/enroll.html", locals(), context_instance=RequestContext(request))
+		#raise Http404
+
+def my_courses(request):
+	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
+		try:
+			name = RegStudent.objects.get(user=request.user)
+		except RegStudent.DoesNotExist:
+			name = None
+		try:
+			student = Student.objects.get(name=name)
+		except Student.DoesNotExist:
+			student = None
+		my_enrolled_courses = student.courses.all()
+		return render_to_response("student/mycourses.html", locals(), context_instance=RequestContext(request))
+	else:
+		messages.error(request, 'Your account is not active yet, please conatct admin.')
+		return render_to_response("student/mycourses.html", locals(), context_instance=RequestContext(request))
+
+
 
 def enroll(request, id):
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:

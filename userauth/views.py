@@ -18,8 +18,10 @@ def signin(request):
 		user = authenticate(username = username, password = password)
 		if user is not None:
 			login(request, user)
-			#return HttpResponseRedirect('//')
-			return render(request, "home.html", locals())
+			if user.is_superuser:
+				return render(request, "home.html", locals())
+			else:
+				return HttpResponseRedirect('/student/courses')
 		else:
 			messages.error(request, 'username or password does not match')
 	context = {'form': form}
