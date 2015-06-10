@@ -28,3 +28,24 @@ class Course(models.Model):
 
 	def show_course_type(self):
 		return '%s' %(self.get_course_type_display())
+
+class CourseAssignment(models.Model):
+	course = models.ForeignKey(Course)
+	deccription = models.CharField(max_length=100, null=True, blank=True)
+	assignment = models.FileField(upload_to="assignments/files/")
+	deadline = models.DateTimeField('deadline', null=True, blank=True)
+	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
+
+class CourseSyllabus(models.Model):
+	course = models.ForeignKey(Course)
+	syllabus = models.FileField(upload_to="syllabus/files/")
+
+class CourseLectureNotes(models.Model):
+	course = models.ForeignKey(Course)
+	lecture_notes = models.FileField(upload_to="lecturenotes/files/")
+	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
+
+class CourseNotice(models.Model):
+	course = models.ForeignKey(Course)
+	content = models.CharField(max_length=200)
+	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)

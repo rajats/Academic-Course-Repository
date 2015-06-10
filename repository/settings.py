@@ -43,7 +43,6 @@ INSTALLED_APPS = (
     'course',
     'assignment',
     'notice',
-    'discussion',
     'lecturenotes',
     'notification',
     'student',
