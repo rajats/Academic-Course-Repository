@@ -25,3 +25,6 @@ class Course(models.Model):
 
 	def show_name_type(self):
 		return '%s (type %s)' % (self.name,self.get_course_type_display())
+
+	def show_course_type(self):
+		return '%s' %(self.get_course_type_display())

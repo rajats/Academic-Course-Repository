@@ -2,6 +2,7 @@ html {
   position: relative;
   min-height: 100%;
 }
+
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
@@ -37,4 +38,3 @@ body {
     width:33.333%;
     text-align:right;
 }
-

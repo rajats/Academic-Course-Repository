@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response, RequestContext, Http404,HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.db.models import Q 
 
 from course.models import Course 
 from userauth.models import RegStudent
@@ -9,14 +10,26 @@ from .models import Student
 def show_courses(request):
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		try:
-			name = RegStudent.objects.get(user=request.user)
-			student_sem = RegStudent.objects.get(user=request.user).semester
-			student = Student.objects.get(name=name)
+			instance = RegStudent.objects.get(user=request.user)
+			student_sem = instance.semester
+			student_programme = instance.programme
+			student = Student.objects.get(name=instance)
 		except RegStudent.DoesNotExist:
 			student_sem = None
 		try:
-			courses = Course.objects.filter(semester=student_sem)
+			courses = Course.objects.filter(semester=student_sem).filter(programme=student_programme)
 			unenrolled_courses = []
+			elective_one, elective_two, elective_three = False, False, False
+			for course in student.courses.all():
+				if ('2' in course.course_type) and not elective_one:
+					courses = Course.objects.filter(semester=student_sem).filter(programme=student_programme).filter(~Q(course_type = '2'))
+					elective_one = True
+				elif ('3' in course.course_type) and not elective_two:
+					courses = Course.objects.filter(semester=student_sem).filter(programme=student_programme).filter(~Q(course_type = '3'))
+					elective_two = True
+				elif ('4' in course.course_type) and not elective_three:
+					courses = Course.objects.filter(semester=student_sem).filter(programme=student_programme).filter(~Q(course_type = '4'))
+					elective_three = True
 			for course in courses:
 				if course not in student.courses.all():
 					unenrolled_courses.append(course)
@@ -26,7 +39,6 @@ def show_courses(request):
 	else:
 		messages.error(request, 'Your account is not active yet, please conatct admin.')
 		return render_to_response("student/enroll.html", locals(), context_instance=RequestContext(request))
-		#raise Http404
 
 def my_courses(request):
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
