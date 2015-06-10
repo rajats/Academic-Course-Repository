@@ -1,7 +1,10 @@
 # encoding=utf8
 from django import forms
+from django.forms import ModelForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
+
+from .models import RegStudent
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
@@ -43,6 +46,8 @@ class RegistrationFormStudent(forms.Form):
 
 	def clean_enroll_no(self):
 		enroll_no = self.cleaned_data['enroll_no']
+		if RegStudent.objects.filter(enroll_no = enroll_no).exists():
+			raise forms.ValidationError("roll number %s already exists" %(enroll_no))
 		if enroll_no.find('ipg') == -1:
 			raise forms.ValidationError("invalid roll number")
 		return enroll_no
@@ -93,5 +98,16 @@ class RegistrationFormProfessor(forms.Form):
 			cleaned_data['repeat_password'] = set_password
 		return cleaned_data
 
+class RegStudentForm(ModelForm):
+	def __init__(self, *args, **kwargs):
+		super(RegStudentForm, self).__init__(*args, **kwargs)
+		instance = getattr(self, 'instance', None)
+		if instance and instance.pk:
+			self.fields['enroll_no'].widget.attrs['readonly'] = True
+			self.fields['programme'].widget.attrs['readonly'] = True
+			self.fields['user'].widget.attrs['readonly'] = True
 
+	class Meta:
+		model = RegStudent
+		fields = ('user','programme','enroll_no','semester')  
 

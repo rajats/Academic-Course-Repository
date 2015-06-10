@@ -1,10 +1,10 @@
-from django.shortcuts import render, render_to_response, HttpResponseRedirect
+from django.shortcuts import render, render_to_response, HttpResponseRedirect, Http404, RequestContext
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 
 from student.signals import new_student_course
-from .forms import LoginForm, RegistrationFormStudent, RegistrationFormProfessor
+from .forms import LoginForm, RegistrationFormStudent, RegistrationFormProfessor, RegStudentForm
 from .models import RegStudent
 from .signals import new_student, new_professor
 
@@ -69,4 +69,18 @@ def signout(request):
 	logout(request)
 	messages.success(request,"You have logged out")
 	return HttpResponseRedirect('/userauth/login/')
+
+def account_info(request):
+	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
+		try:
+			instance = RegStudent.objects.get(user=request.user)
+		except RegStudent.DoesNotExist:
+			instance = None
+		form = RegStudentForm(request.POST or None, instance = instance)
+		if form.is_valid():
+			account_edit = form.save(commit=False)
+			account_edit.save()
+		return render_to_response("userauth/account.html", locals(), context_instance=RequestContext(request))
+	else:
+		raise Http404
 

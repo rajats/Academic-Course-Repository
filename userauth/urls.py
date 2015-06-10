@@ -5,6 +5,7 @@ urlpatterns = patterns('userauth.views',
     #url(r'^login/','signin', name="login"),
     url(r'^login/', 'signin', name="login"),
     url(r'^logout/','signout', name="logout"),
+    url(r'^account-info/','account_info', name="account_info"),
     url(r'^register-student/','register_student', name="register_student"),
     url(r'^register-professor/','register_professor', name="register_professor"),
 )

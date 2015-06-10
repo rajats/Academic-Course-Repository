@@ -21,7 +21,6 @@ class RegProfessor(models.Model):
 	def __unicode__(self):
 		return str(self.user)
 
-
 def reg_new_student(sender, **kwargs):
 	kwargs.pop('signal', None)
 	programme = kwargs.pop("programme")
@@ -35,6 +34,4 @@ def reg_new_professor(sender, **kwargs):
 	kwargs.pop('signal', None)
 	RegProfessor.objects.create(user=sender)
 
-new_professor.connect(reg_new_professor)
-
-     
+new_professor.connect(reg_new_professor)   

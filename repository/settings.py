@@ -47,7 +47,6 @@ INSTALLED_APPS = (
     'lecturenotes',
     'notification',
     'student',
-    'userprofile',
     'userauth',
 )
 
