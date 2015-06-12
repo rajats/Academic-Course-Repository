@@ -2,9 +2,11 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response, RequestContext, Http404,HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.utils import timezone
 
 from student.models import Student
 from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice
+from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesForm, CourseNoticeForm
 
 from userauth.models import RegProfessor, RegStudent
 
@@ -22,7 +24,19 @@ def view_course(request, id):
 
 
 def add_assignment(request, id):
-	pass
+	if request.user.is_authenticated() and RegProfessor.objects.get(user=request.user).active:
+		professor = RegProfessor.objects.get(user=request.user)
+		course = Course.objects.get(id=id)
+		if course.instructor == professor:
+			form = CourseAssignmentForm(request.POST or None)
+			if form.is_valid():
+				description = form.cleaned_data['description']
+				assignment = form.cleaned_data['assignment']
+				deadline = form.cleaned_data['deadline']
+				CourseAssignment.objects.create(course=course, description=description, assignment=assignment, deadline=deadline, timestamp=timezone.now())
+		return render_to_response("course/add_assignment.html", locals(), context_instance=RequestContext(request))
+	else:
+		raise Http404
 
 def add_syllabus(request, id):
 	pass

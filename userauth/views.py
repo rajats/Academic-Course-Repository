@@ -5,7 +5,7 @@ from django.contrib import messages
 
 from student.signals import new_student_course
 from .forms import LoginForm, RegistrationFormStudent, RegistrationFormProfessor, RegStudentForm
-from .models import RegStudent
+from .models import RegStudent, RegProfessor
 from .signals import new_student, new_professor
 
 User = get_user_model()
@@ -18,10 +18,11 @@ def signin(request):
 		user = authenticate(username = username, password = password)
 		if user is not None:
 			login(request, user)
-			if user.is_superuser:
-				return render(request, "home.html", locals())
-			else:
-				return HttpResponseRedirect('/student/courses')
+			if RegStudent.objects.filter(user=user).exists():
+				reg_student = RegStudent.objects.get(user=user)
+			elif RegProfessor.objects.filter(user=user).exists():
+				reg_professor = RegProfessor.objects.get(user=user)
+			return render(request, "home.html", locals())
 		else:
 			messages.error(request, 'username or password does not match')
 	context = {'form': form}

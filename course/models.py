@@ -31,7 +31,7 @@ class Course(models.Model):
 
 class CourseAssignment(models.Model):
 	course = models.ForeignKey(Course)
-	deccription = models.CharField(max_length=100, null=True, blank=True)
+	description = models.CharField(max_length=100, null=True, blank=True)
 	assignment = models.FileField(upload_to="assignments/files/")
 	deadline = models.DateTimeField('deadline', null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
@@ -39,6 +39,7 @@ class CourseAssignment(models.Model):
 class CourseSyllabus(models.Model):
 	course = models.ForeignKey(Course)
 	syllabus = models.FileField(upload_to="syllabus/files/")
+	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
 
 class CourseLectureNotes(models.Model):
 	course = models.ForeignKey(Course)
