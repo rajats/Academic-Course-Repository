@@ -22,19 +22,20 @@ def show_courses(request):
 			unenrolled_courses = []
 			elective_one, elective_two, elective_three = False, False, False
 			for course in student.courses.all():
-				if ('2' in course.course_type) and not elective_one:
-					courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '2'))
-					elective_one = True
-				if ('3' in course.course_type) and not elective_two:
-					courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '3'))
-					elective_two = True
-				if ('4' in course.course_type) and not elective_three:
-					courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '4'))
-					elective_three = True
-				if elective_one and elective_two:
-					courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '2')).filter(~Q(course_type = '3'))
-				if elective_one and elective_two and elective_three:
-					courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '2')).filter(~Q(course_type = '3')).filter(~Q(course_type = '4'))
+				if student_sem == course.semester:
+					if ('2' in course.course_type) and not elective_one:
+						courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '2'))
+						elective_one = True
+					if ('3' in course.course_type) and not elective_two:
+						courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '3'))
+						elective_two = True
+					if ('4' in course.course_type) and not elective_three:
+						courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '4'))
+						elective_three = True
+					if elective_one and elective_two:
+						courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '2')).filter(~Q(course_type = '3'))
+					if elective_one and elective_two and elective_three:
+						courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '2')).filter(~Q(course_type = '3')).filter(~Q(course_type = '4'))
 			for course in courses:
 				if course not in student.courses.all() and student_programme in course.programme:
 					unenrolled_courses.append(course)
