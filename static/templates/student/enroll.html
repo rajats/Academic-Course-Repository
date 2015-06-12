@@ -6,13 +6,43 @@
 		    <h3 class="panel-title">Courses available for enrollment</h3>
 		  </div>
 		  <div class="panel-body">
-		  	{% if unenrolled_courses %}
-			  	{% for course in unenrolled_courses %}
-			  		<p>{{ course.show_name_type }}
-			  			<a class="btn btn-md btn-success pull-right" href='{% url "enroll" course.id %}' role="button">Enroll</a>
-			  		</p>
-			  		<hr>
-			  	{% endfor %}
+		  	{% if unenrolled_compulsary_courses or unenrolled_elective1_courses or unenrolled_elective2_courses or unenrolled_elective3_courses%}
+		  		{% if unenrolled_compulsary_courses %}
+			  		<h2>Compulsary Courses</h2>
+				  	{% for course in unenrolled_compulsary_courses %}
+				  		<p>{{ course.show_name_type }}
+				  			<a class="btn btn-md btn-success pull-right" href='{% url "enroll" course.id %}' role="button">Enroll</a>
+				  		</p>
+				  		<hr>
+				  	{% endfor %}
+				{% endif %}
+				{% if unenrolled_elective1_courses %}
+			  		<h2>Elective1 Courses</h2>
+				  	{% for course in unenrolled_elective1_courses %}
+				  		<p>{{ course.show_name_type }}
+				  			<a class="btn btn-md btn-success pull-right" href='{% url "enroll" course.id %}' role="button">Enroll</a>
+				  		</p>
+				  		<hr>
+				  	{% endfor %}
+				{% endif %}
+				{% if unenrolled_elective2_courses %}
+			  		<h2>Elective2 Courses</h2>
+				  	{% for course in unenrolled_elective2_courses %}
+				  		<p>{{ course.show_name_type }}
+				  			<a class="btn btn-md btn-success pull-right" href='{% url "enroll" course.id %}' role="button">Enroll</a>
+				  		</p>
+				  		<hr>
+				  	{% endfor %}
+				{% endif %}
+				{% if unenrolled_elective3_courses %}
+			  		<h2>Elective3 Courses</h2>
+				  	{% for course in unenrolled_elective3_courses %}
+				  		<p>{{ course.show_name_type }}
+				  			<a class="btn btn-md btn-success pull-right" href='{% url "enroll" course.id %}' role="button">Enroll</a>
+				  		</p>
+				  		<hr>
+				  	{% endfor %}
+				{% endif %}
 			{% else %}
 				<div class="alert alert-info" role="alert">No courses available for enrollment</div>
 			{% endif %}

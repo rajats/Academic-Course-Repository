@@ -8,9 +8,6 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$','repository.views.home', name="home"),           #this home page url
     (r'^course/', include('course.urls')),
-    (r'^assignment/', include('assignment.urls')),
-    (r'^notice/', include('notice.urls')),
-    (r'^lecturenotes/', include('lecturenotes.urls')),
     (r'^notification/', include('notification.urls')),
     (r'^student/', include('student.urls')),
     (r'^userauth/', include('userauth.urls')),

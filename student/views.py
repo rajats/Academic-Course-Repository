@@ -19,7 +19,7 @@ def show_courses(request):
 		try:
 			print student_sem, student_programme
 			courses = Course.objects.filter(semester=student_sem)
-			unenrolled_courses = []
+			unenrolled_compulsary_courses, unenrolled_elective1_courses, unenrolled_elective2_courses, unenrolled_elective3_courses = [],[],[],[]
 			elective_one, elective_two, elective_three = False, False, False
 			for course in student.courses.all():
 				if student_sem == course.semester:
@@ -38,7 +38,14 @@ def show_courses(request):
 						courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '2')).filter(~Q(course_type = '3')).filter(~Q(course_type = '4'))
 			for course in courses:
 				if course not in student.courses.all() and student_programme in course.programme:
-					unenrolled_courses.append(course)
+					if '1' in course.course_type:
+						unenrolled_compulsary_courses.append(course)
+					elif '2' in course.course_type:
+						unenrolled_elective1_courses.append(course)
+					elif '3' in course.course_type:
+						unenrolled_elective2_courses.append(course)
+					elif '4' in course.course_type:
+						unenrolled_elective3_courses.append(course)
 		except Course.DoesNotExist:
 			courses = None
 		return render_to_response("student/enroll.html", locals(), context_instance=RequestContext(request))
