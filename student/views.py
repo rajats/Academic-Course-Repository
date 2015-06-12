@@ -17,21 +17,26 @@ def show_courses(request):
 		except RegStudent.DoesNotExist:
 			student_sem = None
 		try:
-			courses = Course.objects.filter(semester=student_sem).filter(programme=student_programme)
+			print student_sem, student_programme
+			courses = Course.objects.filter(semester=student_sem)
 			unenrolled_courses = []
 			elective_one, elective_two, elective_three = False, False, False
 			for course in student.courses.all():
 				if ('2' in course.course_type) and not elective_one:
-					courses = Course.objects.filter(semester=student_sem).filter(programme=student_programme).filter(~Q(course_type = '2'))
+					courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '2'))
 					elective_one = True
-				elif ('3' in course.course_type) and not elective_two:
-					courses = Course.objects.filter(semester=student_sem).filter(programme=student_programme).filter(~Q(course_type = '3'))
+				if ('3' in course.course_type) and not elective_two:
+					courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '3'))
 					elective_two = True
-				elif ('4' in course.course_type) and not elective_three:
-					courses = Course.objects.filter(semester=student_sem).filter(programme=student_programme).filter(~Q(course_type = '4'))
+				if ('4' in course.course_type) and not elective_three:
+					courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '4'))
 					elective_three = True
+				if elective_one and elective_two:
+					courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '2')).filter(~Q(course_type = '3'))
+				if elective_one and elective_two and elective_three:
+					courses = Course.objects.filter(semester=student_sem).filter(~Q(course_type = '2')).filter(~Q(course_type = '3')).filter(~Q(course_type = '4'))
 			for course in courses:
-				if course not in student.courses.all():
+				if course not in student.courses.all() and student_programme in course.programme:
 					unenrolled_courses.append(course)
 		except Course.DoesNotExist:
 			courses = None
@@ -55,8 +60,6 @@ def my_courses(request):
 	else:
 		messages.error(request, 'Your account is not active yet, please conatct admin.')
 		return render_to_response("student/mycourses.html", locals(), context_instance=RequestContext(request))
-
-
 
 def enroll(request, id):
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:

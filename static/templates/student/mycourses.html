@@ -9,7 +9,7 @@
 		  	{% if my_enrolled_courses %}
 			  	{% for course in my_enrolled_courses %}
 			  		<p>{{ course.show_name_type }}
-			  			<a class="btn btn-md btn-success pull-right" href='#' role="button">View Course</a>
+			  			<a class="btn btn-md btn-success pull-right" href='{% url "view_course" course.id %}' role="button">View Course</a>
 			  		</p>
 			  		<hr>
 			  	{% endfor %}
