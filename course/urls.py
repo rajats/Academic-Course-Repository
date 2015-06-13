@@ -7,6 +7,7 @@ urlpatterns = patterns('course.views',
 	url(r'^add-assignment/(?P<id>.*)','add_assignment', name="add_assignment"), 
 	url(r'^view-syllabus/(?P<id>.*)','view_syllabus', name="view_syllabus"), 
 	url(r'^add-syllabus/(?P<id>.*)','add_syllabus', name="add_syllabus"), 
+	url(r'^view-lecture-notes/(?P<id>.*)','view_lecture_notes', name="view_lecture_notes"), 
 	url(r'^add-lecture-notes/(?P<id>.*)','add_lecture_notes', name="add_lecture_notes"), 
 	url(r'^add-notice/(?P<id>.*)','add_notice', name="add_notice"), 
 )

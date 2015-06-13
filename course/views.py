@@ -53,7 +53,6 @@ def view_assignment(request, id):
 	else:
 		raise Http404
 
-
 def add_assignment(request, id):
 	if request.user.is_authenticated() and RegProfessor.objects.get(user=request.user).active:
 		reg_professor = RegProfessor.objects.get(user=request.user)
@@ -95,6 +94,30 @@ def view_syllabus(request, id):
 
 def add_syllabus(request, id):
 	pass
+
+def view_lecture_notes(request, id):
+	if request.user.is_authenticated():
+		course = Course.objects.get(id=id)
+		lecture_notes = CourseLectureNotes.objects.filter(course=course)
+		if RegStudent.objects.filter(user=request.user.id).exists():
+			if RegStudent.objects.get(user=request.user).active:
+				reg_student = RegStudent.objects.get(user=request.user)
+				student = Student.objects.get(name=reg_student)
+				if course in student.courses.all():
+					return render_to_response("course/viewlecturenotes.html", locals(), context_instance=RequestContext(request))
+				else:
+					raise Http404
+		elif RegProfessor.objects.filter(user=request.user.id).exists():
+			if RegProfessor.objects.get(user=request.user).active:
+				reg_professor = RegProfessor.objects.get(user=request.user)
+				if course in Course.objects.filter(instructor=reg_professor):
+					return render_to_response("course/viewlecturenotes.html", locals(), context_instance=RequestContext(request))
+				else:
+					raise Http404
+		else:
+			raise Http404
+	else:
+		raise Http404
 
 def add_lecture_notes(request, id):
 	pass
