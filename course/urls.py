@@ -3,6 +3,7 @@ from django.conf import settings
 
 urlpatterns = patterns('course.views',
 	url(r'^view-course/(?P<id>.*)','view_course', name="view_course"), 
+	url(r'^view-assignment/(?P<id>.*)','view_assignment', name="view_assignment"), 
 	url(r'^add-assignment/(?P<id>.*)','add_assignment', name="add_assignment"), 
 	url(r'^add-syllabus/(?P<id>.*)','add_syllabus', name="add_syllabus"), 
 	url(r'^add-lecture-notes/(?P<id>.*)','add_lecture_notes', name="add_lecture_notes"), 

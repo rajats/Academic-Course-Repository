@@ -1,4 +1,6 @@
 # encoding=utf8
+import os
+
 from django.db import models
 
 from multiselectfield import MultiSelectField
@@ -35,6 +37,12 @@ class CourseAssignment(models.Model):
 	assignment = models.FileField(upload_to="assignments/files/")
 	deadline = models.DateTimeField('deadline', null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
+
+	def file_link(self):
+		if self.assignment:
+			return self.assignment.url
+		else:
+			return "No attachment"
 
 class CourseSyllabus(models.Model):
 	course = models.ForeignKey(Course)

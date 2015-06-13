@@ -1,0 +1,16 @@
+{% extends "course/viewcourse.html" %}
+{% block course %}
+{% if assignments %}
+	<div align="center"><h2>Assignments</h2></div>
+	<div class="col-sm-6 col-sm-offset-3">
+	{% for assignment in assignments %}
+		<h3>{{ assignment.description }}</h3>
+		<h4><a href="{{ assignment.file_link }}">assignment</a></h4>
+		<h4>Deadline for submission : {{ assignment.deadline }}</h4>
+		<h4>added on : {{ assignment.timestamp }}</h4>
+		<hr/>
+	{% endfor %}
+	</div>
+{% endif %}
+{% endblock %}
+
