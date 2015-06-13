@@ -11,16 +11,25 @@ from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesF
 from userauth.models import RegProfessor, RegStudent
 
 def view_course(request, id):
-	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
-		reg_student = RegStudent.objects.get(user=request.user)
-		student = Student.objects.get(name=reg_student)
+	if request.user.is_authenticated():
 		course = Course.objects.get(id=id)
-		if course in student.courses.all():
-			return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
+		if RegStudent.objects.filter(user=request.user.id).exists():
+			if RegStudent.objects.get(user=request.user).active:
+				reg_student = RegStudent.objects.get(user=request.user)
+				student = Student.objects.get(name=reg_student)
+				if course in student.courses.all():
+					return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
+		elif RegProfessor.objects.filter(user=request.user.id).exists():
+			if RegProfessor.objects.get(user=request.user).active:
+				reg_professor = RegProfessor.objects.get(user=request.user)
+				if course in Course.objects.filter(instructor=reg_professor):
+					return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
 		else:
 			raise Http404
 	else:
 		raise Http404
+
+def view_assignment(request, id):
 
 
 def add_assignment(request, id):

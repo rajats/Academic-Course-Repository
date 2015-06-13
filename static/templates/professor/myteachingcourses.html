@@ -7,7 +7,7 @@
 		  </div>
 		  <div class="panel-body">
 		  	{% if courses %}
-			  	{% for courses %}
+			  	{% for course in courses %}
 			  		<p>{{ course.show_name_type }}
 			  			<a class="btn btn-md btn-success pull-right" href='{% url "view_course" course.id %}' role="button">View Course</a>
 			  		</p>
