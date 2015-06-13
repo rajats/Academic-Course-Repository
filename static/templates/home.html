@@ -1,96 +1,13 @@
-{% extends "base.html" %}
+{% extends "navbar.html" %}
 {% block content %}
-{% block navbar %}
-
-
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href='{% url "home" %}'>Online Course Repository XYZ college</a>
-        </div>
-        {% if user.is_authenticated and not user.is_superuser and reg_student %}
-          <div id="navbar" class="navbar-collapse collapse">
-            <div class="navbar-form navbar-right">
-            <ul class="nav navbar-nav navbar-right">
-              <li><a href='{% url "show_courses" %}'><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>Enroll now</a></li>
-              <li><a href='{% url "my_courses" %}'><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>My courses</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>Account <span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href='{% url "account_info" %}'>Update Account Info</a></li>
-                  <li class="divider"></li>
-                  <li><a href='{% url "logout" %}'>Logout</a></li>
-                </ul>
-              </li>
-            </ul>
-            </div>
-          </div>
-        {% elif user.is_authenticated and not user.is_superuser and reg_professor %}
-          <div id="navbar" class="navbar-collapse collapse">
-            <div class="navbar-form navbar-right">
-            <ul class="nav navbar-nav navbar-right">
-              <li>
-                  <font color="green"><h3>Instructor</h3></font>
-                </li>
-              <li><a href='{% url "my_courses" %}'><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>My courses</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>Account <span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href='{% url "logout" %}'>Logout</a></li>
-                </ul>
-              </li>
-            </ul>
-            </div>
-          </div>
-        {% elif user.is_superuser %}
-          <div id="navbar" class="navbar-collapse collapse">
-            <div class="navbar-form navbar-right">
-              <ul class="nav navbar-nav navbar-right">
-                <li>
-                  <font color="green"><h3>Repository admin</h3></font>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>Account <span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href='{% url "logout" %}'>Logout</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-        {% else %}
-          <div id="navbar" class="navbar-collapse collapse">
-            <div class="navbar-form navbar-right">
-              <a class="btn btn-md btn-success" href='{% url "login" %}' role="button">Login</a>
-              <a class="btn btn-md btn-success" href="/#register" role="button">Register</a>
-            </div>
-          </div><!--/.navbar-collapse -->
-        {% endif %}
-      </div>
-    </nav>
-
-
-
-
-{% endblock %}
 {% block jumbotron %}
     <div class="jumbotron">
       <div class="container">
         <h1>Online course repository!</h1>
         <p>Welcome to online course repository. You can find all your courses here at one place. Login and get
-        	enrolled in a course to get access to full features. Features include online assignments, lecture
-        	notes, live discussion,class notice etc.</br>
-        	Start Learning now</p>
+          enrolled in a course to get access to full features. Features include online assignments, lecture
+          notes, live discussion,class notice etc.</br>
+          Start Learning now</p>
       </div>
     </div>
     <hr>
@@ -99,14 +16,14 @@
     <div class="container">
       <div class="row">
         <div class="col-md-4">
-        	<img src="{{ STATIC_URL }}images/demologo.jpg">
+          <img src="{{ STATIC_URL }}images/demologo.jpg">
         </div>
         <div class="col-md-8">
-        	<h2>
-        	</br>
-        	</br>
-        		College motto goes here!!
-        	</h2>
+          <h2>
+          </br>
+          </br>
+            College motto goes here!!
+          </h2>
         </div>
       </div>
     </div>
@@ -118,17 +35,17 @@
         <div class="col-md-6">
           <h2>What Students can do?</h2>
           <p>Submit assignments online for the courses enrolled.See deadlines for coursework.Get notfified about new course materials.
-          	Meet fellow students and professors on discussion forum and ask doubts online etc. </p>
+            Meet fellow students and professors on discussion forum and ask doubts online etc. </p>
             {% if not user.is_authenticated %}
-          	  <p><a class="btn btn-default" href='{% url "register_student" %}' role="button">Register as Student &raquo;</a></p>
+              <p><a class="btn btn-default" href='{% url "register_student" %}' role="button">Register as Student &raquo;</a></p>
             {% endif %}
         </div>
         <div class="col-md-6">
           <h2>What Professors can do?</h2>
           <p>Upload an assignment and give deadlines for their courses.Attach a notice in a class.See students doubts in
-          	discussion forum.Upload lecture notes. Display marks of students.</p>
+            discussion forum.Upload lecture notes. Display marks of students.</p>
             {% if not user.is_authenticated %}
-          	  <p><a class="btn btn-default" href='{% url "register_professor" %}' role="button">Register as Professor &raquo;</a></p>
+              <p><a class="btn btn-default" href='{% url "register_professor" %}' role="button">Register as Professor &raquo;</a></p>
             {% endif %}
         </div>
       </div>

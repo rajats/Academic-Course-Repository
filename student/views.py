@@ -10,10 +10,10 @@ from .models import Student
 def show_courses(request):
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		try:
-			instance = RegStudent.objects.get(user=request.user)
-			student_sem = instance.semester
-			student_programme = instance.programme
-			student = Student.objects.get(name=instance)
+			reg_student = RegStudent.objects.get(user=request.user)
+			student_sem = reg_student.semester
+			student_programme = reg_student.programme
+			student = Student.objects.get(name=reg_student)
 		except RegStudent.DoesNotExist:
 			student_sem = None
 		try:
@@ -56,11 +56,11 @@ def show_courses(request):
 def my_courses(request):
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		try:
-			name = RegStudent.objects.get(user=request.user)
+			reg_student = RegStudent.objects.get(user=request.user)
 		except RegStudent.DoesNotExist:
-			name = None
+			reg_student = None
 		try:
-			student = Student.objects.get(name=name)
+			student = Student.objects.get(name=reg_student)
 		except Student.DoesNotExist:
 			student = None
 		my_enrolled_courses = student.courses.all()
@@ -72,8 +72,8 @@ def my_courses(request):
 def enroll(request, id):
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		course = Course.objects.get(id=id)
-		student_name = RegStudent.objects.get(user=request.user)
-		student = Student.objects.get(name=student_name)
+		reg_student = RegStudent.objects.get(user=request.user)
+		student = Student.objects.get(name=reg_student)
 		student.courses.add(course)
 		messages.success(request, 'You are enrolled in %s' %(course))
 		return HttpResponseRedirect('/student/courses/')

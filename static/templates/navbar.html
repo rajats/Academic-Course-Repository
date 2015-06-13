@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block navbar %}
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href='{% url "home" %}'>Online Course Repository XYZ college</a>
+        </div>
+        {% if user.is_authenticated and not user.is_superuser and reg_student %}
+          <div id="navbar" class="navbar-collapse collapse">
+            <div class="navbar-form navbar-right">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href='{% url "show_courses" %}'><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>Enroll now</a></li>
+              <li><a href='{% url "my_courses" %}'><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>My courses</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>Account <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href='{% url "account_info" %}'>Update Account Info</a></li>
+                  <li class="divider"></li>
+                  <li><a href='{% url "logout" %}'>Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+            </div>
+          </div>
+        {% elif user.is_authenticated and not user.is_superuser and reg_professor %}
+          <div id="navbar" class="navbar-collapse collapse">
+            <div class="navbar-form navbar-right">
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                  <font color="green"><h3>Instructor</h3></font>
+                </li>
+              <li><a href='{% url "my_teaching_courses" %}'><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>My courses</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                  <span class="glyphicon glyphicon-user" aria-hidden="true"></span>Account <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href='{% url "logout" %}'>Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+            </div>
+          </div>
+        {% elif user.is_superuser %}
+          <div id="navbar" class="navbar-collapse collapse">
+            <div class="navbar-form navbar-right">
+              <ul class="nav navbar-nav navbar-right">
+                <li>
+                  <font color="green"><h3>Repository admin</h3></font>
+                </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>Account <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href='{% url "logout" %}'>Logout</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        {% else %}
+          <div id="navbar" class="navbar-collapse collapse">
+            <div class="navbar-form navbar-right">
+              <a class="btn btn-md btn-success" href='{% url "login" %}' role="button">Login</a>
+              <a class="btn btn-md btn-success" href="/#register" role="button">Register</a>
+            </div>
+          </div><!--/.navbar-collapse -->
+        {% endif %}
+      </div>
+    </nav>
+    {% block content %}
+    {% endblock %}
+{% endblock %}
+
+
+
+
+

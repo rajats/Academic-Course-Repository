@@ -12,8 +12,8 @@ from userauth.models import RegProfessor, RegStudent
 
 def view_course(request, id):
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
-		instance = RegStudent.objects.get(user=request.user)
-		student = Student.objects.get(name=instance)
+		reg_student = RegStudent.objects.get(user=request.user)
+		student = Student.objects.get(name=reg_student)
 		course = Course.objects.get(id=id)
 		if course in student.courses.all():
 			return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
@@ -25,9 +25,9 @@ def view_course(request, id):
 
 def add_assignment(request, id):
 	if request.user.is_authenticated() and RegProfessor.objects.get(user=request.user).active:
-		professor = RegProfessor.objects.get(user=request.user)
+		reg_professor = RegProfessor.objects.get(user=request.user)
 		course = Course.objects.get(id=id)
-		if course.instructor == professor:
+		if course.instructor == reg_professor:
 			form = CourseAssignmentForm(request.POST or None)
 			if form.is_valid():
 				description = form.cleaned_data['description']

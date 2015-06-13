@@ -74,10 +74,10 @@ def signout(request):
 def account_info(request):
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		try:
-			instance = RegStudent.objects.get(user=request.user)
+			reg_student = RegStudent.objects.get(user=request.user)
 		except RegStudent.DoesNotExist:
-			instance = None
-		form = RegStudentForm(request.POST or None, instance = instance)
+			reg_student = None
+		form = RegStudentForm(request.POST or None, instance=reg_student)
 		if form.is_valid():
 			account_edit = form.save(commit=False)
 			account_edit.save()
