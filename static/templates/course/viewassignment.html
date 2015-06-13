@@ -2,6 +2,9 @@
 {% block course %}
 {% if assignments %}
 	<div align="center"><h2>Assignments</h2></div>
+	{% if reg_professor %}
+		<a class="btn btn-md btn-success pull-right" href='#' role="button">Add Assignment</a>
+	{% endif %}
 	<div class="col-sm-6 col-sm-offset-3">
 	{% for assignment in assignments %}
 		<h3>{{ assignment.description }}</h3>

@@ -49,10 +49,22 @@ class CourseSyllabus(models.Model):
 	syllabus = models.FileField(upload_to="syllabus/files/")
 	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
 
+	def file_link(self):
+		if self.syllabus:
+			return self.syllabus.url
+		else:
+			return "No attachment"
+
 class CourseLectureNotes(models.Model):
 	course = models.ForeignKey(Course)
 	lecture_notes = models.FileField(upload_to="lecturenotes/files/")
 	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
+
+	def file_link(self):
+		if self.lecture_notes:
+			return self.lecture_notes.url
+		else:
+			return "No attachment"
 
 class CourseNotice(models.Model):
 	course = models.ForeignKey(Course)

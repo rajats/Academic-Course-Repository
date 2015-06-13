@@ -9,7 +9,7 @@
 		  		<div class="col-sm-2">
   					<ul class="nav nav-pills nav-stacked">
   						<hr/>
-						<li role="presentation" class="active"><a href="#">Home</a></li>
+						<li role="presentation"><a href='{% url "view_course" course.id %}'>Home</a></li>
 						<hr/>
 						<li role="presentation"><a href='{% url "view_assignment" course.id %}'>Assignment</a></li>
 						<hr/>
@@ -27,5 +27,12 @@
 		  </div>
 		</div>
 	</div>
+<script>
+var url = window.location;
+$('ul.nav a[href="'+ url +'"]').parent().addClass('active');
+$('ul.nav a').filter(function() {
+    return this.href == url;
+}).parent().addClass('active');
+</script>
 {% endblock %}
 
