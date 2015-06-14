@@ -3,7 +3,7 @@
 {% if lecture_notes %}
 	<div align="center"><h2>Lecture Notes</h2></div>
 	{% if reg_professor %}
-		<a class="btn btn-md btn-success pull-right" href='{% url "add_syllabus" course.id %}' role="button">Add Lecture Notes</a>
+		<a class="btn btn-md btn-success pull-right" href='{% url "add_lecture_notes" course.id %}' role="button">Add Lecture Notes</a>
 	{% endif %}
 	<div class="col-sm-6 col-sm-offset-3">
 	{% for lecture_note in lecture_notes %}

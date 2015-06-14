@@ -1,8 +1,7 @@
 {% extends "course/viewcourse.html" %}
 {% load crispy_forms_tags %}
 {% block course %}
-{{ form.media }}
-<div align="center"><h2>Add Assignment</h2></div>
+<div align="center"><h2>Add Lecture Notes</h2></div>
 <div class="col-sm-6 col-sm-offset-3">
 	<form method='POST' action='' enctype="multipart/form-data"> {% csrf_token %}
 		{{ form|crispy }}

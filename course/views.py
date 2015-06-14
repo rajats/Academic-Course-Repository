@@ -134,7 +134,19 @@ def view_lecture_notes(request, id):
 		raise Http404
 
 def add_lecture_notes(request, id):
-	pass
+	if request.user.is_authenticated() and RegProfessor.objects.get(user=request.user).active:
+		reg_professor = RegProfessor.objects.get(user=request.user)
+		course = Course.objects.get(id=id)
+		if course.instructor == reg_professor:
+			form = CourseLectureNotesForm(request.POST or None, request.FILES or None)
+			if form.is_valid():
+				lecture_notes = form.cleaned_data['lecture_notes']
+				CourseLectureNotes.objects.create(course=course, lecture_notes=lecture_notes, timestamp=timezone.now())
+				messages.success(request, 'Your Lecture Notes was added!')
+				return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
+		return render_to_response("course/addlecturenotes.html", locals(), context_instance=RequestContext(request))
+	else:
+		raise Http404
 
 def add_notice(request, id):
 	pass

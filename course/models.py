@@ -68,5 +68,6 @@ class CourseLectureNotes(models.Model):
 
 class CourseNotice(models.Model):
 	course = models.ForeignKey(Course)
-	content = models.CharField(max_length=200)
+	title = models.CharField(max_length=20, null=True, blank=True)
+	content = models.TextField(max_length=1000, null=True, blank=True)
 	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
