@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, RequestContext, Http404, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils import timezone
@@ -66,7 +67,7 @@ def add_assignment(request, id):
 				deadline = form.cleaned_data['deadline']
 				CourseAssignment.objects.create(course=course, description=description, assignment=assignment, deadline=deadline, timestamp=timezone.now())
 				messages.success(request, 'Your assignment was added')
-				return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
+				return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
 		return render_to_response("course/addassignment.html", locals(), context_instance=RequestContext(request))
 	else:
 		raise Http404
@@ -105,7 +106,7 @@ def add_syllabus(request, id):
 				syllabus = form.cleaned_data['syllabus']
 				CourseSyllabus.objects.create(course=course, syllabus=syllabus, timestamp=timezone.now())
 				messages.success(request, 'Your syllabus was added!')
-				return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
+				return HttpResponseRedirect(reverse('view_syllabus', kwargs={'id': course.id}))
 		return render_to_response("course/addsyllabus.html", locals(), context_instance=RequestContext(request))
 	else:
 		raise Http404
@@ -144,7 +145,7 @@ def add_lecture_notes(request, id):
 				lecture_notes = form.cleaned_data['lecture_notes']
 				CourseLectureNotes.objects.create(course=course, lecture_notes=lecture_notes, timestamp=timezone.now())
 				messages.success(request, 'Your Lecture Notes was added!')
-				return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
+				return HttpResponseRedirect(reverse('view_lecture_notes', kwargs={'id': course.id}))
 		return render_to_response("course/addlecturenotes.html", locals(), context_instance=RequestContext(request))
 	else:
 		raise Http404
@@ -160,7 +161,7 @@ def add_notice(request, id):
 				content = form.cleaned_data['content']
 				CourseNotice.objects.create(course=course, title=title, content=content ,timestamp=timezone.now())
 				messages.success(request, 'Your notice was added!')
-				return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
+				return HttpResponseRedirect(reverse('view_course', kwargs={'id': course.id}))
 		return render_to_response("course/addnotice.html", locals(), context_instance=RequestContext(request))
 	else:
 		raise Http404

@@ -3,7 +3,7 @@
 {% block course %}
 {{ form.media }}
 <div align="center"><h2>Add Assignment</h2></div>
-<div class="col-sm-6 col-sm-offset-3">
+<div class="col-sm-12 col-sm-offset-3">
 	<form method='POST' action='' enctype="multipart/form-data"> {% csrf_token %}
 		{{ form|crispy }}
 		<input class='btn btn-default' type='submit' value='add'/>
