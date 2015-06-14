@@ -1,0 +1,15 @@
+{% extends "course/viewcourse.html" %}
+{% load crispy_forms_tags %}
+{% block course %}
+<div class="col-sm-12 col-sm-offset-3">
+	<div align="center"><h2>Give Feedback about course</h2></div>
+</div>
+<div class="col-sm-12 col-sm-offset-3">
+	<h4>Your identity will not be revealed!</h4>
+	<form method='POST' action=''> {% csrf_token %}
+		{{ form|crispy }}
+		<input class='btn btn-default' type='submit' value='submit feedback' />
+	</form> 
+</div>
+{% endblock %}
+

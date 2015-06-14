@@ -17,6 +17,13 @@
 						<hr/>
 						<li role="presentation"><a href='{% url "view_syllabus" course.id %}'>Syllabus</a></li>
 						<hr/>
+						{% if reg_student %}
+							<li role="presentation"><a href='{% url "add_feedback" course.id %}'>Give Feedback</a></li>
+							<hr/>
+						{% elif reg_professor %}
+							<li role="presentation"><a href='{% url "view_feedback" course.id %}'>View Feedbacks</a></li>
+							<hr/>
+						{% endif %}
 					</ul>
 				</div>
 		  		<div class="col-sm-8">

@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.utils import timezone
 
 from student.models import Student
-from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice
-from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesForm, CourseNoticeForm
+from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice, CourseFeedback
+from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesForm, CourseNoticeForm, CourseFeedbackForm
 
 from userauth.models import RegProfessor, RegStudent
 
@@ -163,5 +163,37 @@ def add_notice(request, id):
 				messages.success(request, 'Your notice was added!')
 				return HttpResponseRedirect(reverse('view_course', kwargs={'id': course.id}))
 		return render_to_response("course/addnotice.html", locals(), context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+def add_feedback(request, id):
+	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
+		reg_student = RegStudent.objects.get(user=request.user)
+		course = Course.objects.get(id=id)
+		student = Student.objects.get(name=reg_student)
+		if course in student.courses.all():
+			form = CourseFeedbackForm(request.POST or None,)
+			if form.is_valid():
+				content = form.cleaned_data['content']
+				CourseFeedback.objects.create(course=course, content=content ,timestamp=timezone.now())
+				messages.success(request, 'Your feedback was recorded!')
+				return HttpResponseRedirect(reverse('view_course', kwargs={'id': course.id}))
+		return render_to_response("course/addfeedback.html", locals(), context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+def view_feedback(request, id):
+	if request.user.is_authenticated():
+		course = Course.objects.get(id=id)
+		if RegProfessor.objects.filter(user=request.user.id).exists():
+			if RegProfessor.objects.get(user=request.user).active:
+				reg_professor = RegProfessor.objects.get(user=request.user)
+				if course in Course.objects.filter(instructor=reg_professor):
+					feedbacks = CourseFeedback.objects.filter(course=course)
+					return render_to_response("course/viewfeedback.html", locals(), context_instance=RequestContext(request))
+				else:
+					raise Http404
+		else:
+			raise Http404
 	else:
 		raise Http404

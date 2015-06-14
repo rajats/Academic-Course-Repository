@@ -1,0 +1,20 @@
+{% extends "course/viewcourse.html" %}
+{% block course %}
+{% if feedbacks %}
+	<div class="col-sm-12 col-sm-offset-3">
+	<div align="center"><h2>Feedbacks</h2></div>
+	<hr/>
+	{% for feedback in feedbacks %}
+		<h4>{{ feedback.content }}</h4>
+		<h4><p align="right">added on : {{ feedback.timestamp }}</p></h4>
+		<hr/>
+	{% endfor %}
+	</div>
+{% else %}
+	<br></br>
+	<div class="col-sm-12 col-sm-offset-3">
+		<div class="alert alert-info" role="alert">No Feedbacks Received!</div>
+	</div>
+{% endif %}
+{% endblock %}
+
