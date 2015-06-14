@@ -3,12 +3,14 @@ from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 
+from datetimewidget.widgets import DateTimeWidget, DateWidget, TimeWidget
+
 from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice
 
-class CourseAssignmentForm(ModelForm):
-	class Meta:
-		model = CourseAssignment
-		fields = ('description','assignment','deadline')  
+class CourseAssignmentForm(forms.Form):
+	description = forms.CharField()
+	assignment = forms.FileField()
+	deadline = forms.DateTimeField(widget=DateTimeWidget(usel10n=True, bootstrap_version=3))
 
 class CourseSyllabusForm(ModelForm):
 	class Meta:

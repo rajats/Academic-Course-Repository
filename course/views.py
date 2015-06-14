@@ -58,12 +58,14 @@ def add_assignment(request, id):
 		reg_professor = RegProfessor.objects.get(user=request.user)
 		course = Course.objects.get(id=id)
 		if course.instructor == reg_professor:
-			form = CourseAssignmentForm(request.POST or None)
+			form = CourseAssignmentForm(request.POST or None, request.FILES or None)
 			if form.is_valid():
 				description = form.cleaned_data['description']
 				assignment = form.cleaned_data['assignment']
 				deadline = form.cleaned_data['deadline']
 				CourseAssignment.objects.create(course=course, description=description, assignment=assignment, deadline=deadline, timestamp=timezone.now())
+				messages.success(request, 'Your assignment was added')
+				return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
 		return render_to_response("course/addassignment.html", locals(), context_instance=RequestContext(request))
 	else:
 		raise Http404

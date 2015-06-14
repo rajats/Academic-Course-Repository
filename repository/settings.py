@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'crispy_forms',
     'bootstrap_toolkit',
+    'datetimewidget',
     'endless_pagination',
     'multiselectfield',
     'course',

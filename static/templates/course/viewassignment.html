@@ -1,7 +1,7 @@
 {% extends "course/viewcourse.html" %}
 {% block course %}
 {% if reg_professor %}
-	<a class="btn btn-md btn-success pull-right" href='#' role="button">Add Assignment</a>
+	<a class="btn btn-md btn-success pull-right" href='{% url "add_assignment" course.id %}' role="button">Add Assignment</a>
 {% endif %}
 {% if assignments %}
 	<div align="center"><h2>Assignments</h2></div>
