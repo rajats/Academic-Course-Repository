@@ -95,7 +95,19 @@ def view_syllabus(request, id):
 		raise Http404
 
 def add_syllabus(request, id):
-	pass
+	if request.user.is_authenticated() and RegProfessor.objects.get(user=request.user).active:
+		reg_professor = RegProfessor.objects.get(user=request.user)
+		course = Course.objects.get(id=id)
+		if course.instructor == reg_professor:
+			form = CourseSyllabusForm(request.POST or None, request.FILES or None)
+			if form.is_valid():
+				syllabus = form.cleaned_data['syllabus']
+				CourseSyllabus.objects.create(course=course, syllabus=syllabus, timestamp=timezone.now())
+				messages.success(request, 'Your syllabus was added!')
+				return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
+		return render_to_response("course/addsyllabus.html", locals(), context_instance=RequestContext(request))
+	else:
+		raise Http404
 
 def view_lecture_notes(request, id):
 	if request.user.is_authenticated():
