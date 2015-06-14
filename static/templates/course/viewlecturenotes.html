@@ -1,19 +1,25 @@
 {% extends "course/viewcourse.html" %}
 {% block course %}
-{% if lecture_notes %}
-	<div align="center"><h2>Lecture Notes</h2></div>
+<div class="col-sm-12 col-sm-offset-3">
 	{% if reg_professor %}
 		<a class="btn btn-md btn-success pull-right" href='{% url "add_lecture_notes" course.id %}' role="button">Add Lecture Notes</a>
 	{% endif %}
-	<div class="col-sm-6 col-sm-offset-3">
-	{% for lecture_note in lecture_notes %}
-		<h4><a href="{{ lecture_note.file_link }}">Lecture Notes</a></h4>
-		<h4>added on : {{ lecture_note.timestamp }}</h4>
+</div>
+{% if lecture_notes %}
+	<div class="col-sm-12 col-sm-offset-3">
+		<div align="center"><h2>Lecture Notes</h2></div>
 		<hr/>
-	{% endfor %}
+		{% for lecture_note in lecture_notes %}
+			<h4><a href="{{ lecture_note.file_link }}">Lecture Notes</a></h4>
+			<h4><p align="right">added on : {{ lecture_note.timestamp }}</p></h4>
+			<hr/>
+		{% endfor %}
 	</div>
 {% else %}
-	<div class="alert alert-info" role="alert">No Lecture Notes uploaded by instructor</div>
+	<br></br>
+	<div class="col-sm-12 col-sm-offset-3">
+		<div class="alert alert-info" role="alert">No Lecture Notes uploaded by instructor</div>
+	</div>
 {% endif %}
 {% endblock %}
 

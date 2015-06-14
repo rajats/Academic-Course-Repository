@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render_to_response, RequestContext, Http404,HttpResponseRedirect
+from django.shortcuts import render_to_response, RequestContext, Http404, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils import timezone
@@ -13,17 +13,18 @@ from userauth.models import RegProfessor, RegStudent
 def view_course(request, id):
 	if request.user.is_authenticated():
 		course = Course.objects.get(id=id)
+		notices = CourseNotice.objects.filter(course=course)
 		if RegStudent.objects.filter(user=request.user.id).exists():
 			if RegStudent.objects.get(user=request.user).active:
 				reg_student = RegStudent.objects.get(user=request.user)
 				student = Student.objects.get(name=reg_student)
 				if course in student.courses.all():
-					return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
+					return render_to_response("course/viewnotice.html", locals(), context_instance=RequestContext(request))
 		elif RegProfessor.objects.filter(user=request.user.id).exists():
 			if RegProfessor.objects.get(user=request.user).active:
 				reg_professor = RegProfessor.objects.get(user=request.user)
 				if course in Course.objects.filter(instructor=reg_professor):
-					return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
+					return render_to_response("course/viewnotice.html", locals(), context_instance=RequestContext(request))
 		else:
 			raise Http404
 	else:
@@ -149,4 +150,17 @@ def add_lecture_notes(request, id):
 		raise Http404
 
 def add_notice(request, id):
-	pass
+	if request.user.is_authenticated() and RegProfessor.objects.get(user=request.user).active:
+		reg_professor = RegProfessor.objects.get(user=request.user)
+		course = Course.objects.get(id=id)
+		if course.instructor == reg_professor:
+			form = CourseNoticeForm(request.POST or None,)
+			if form.is_valid():
+				title = form.cleaned_data['title']
+				content = form.cleaned_data['content']
+				CourseNotice.objects.create(course=course, title=title, content=content ,timestamp=timezone.now())
+				messages.success(request, 'Your notice was added!')
+				return render_to_response("course/viewcourse.html", locals(), context_instance=RequestContext(request))
+		return render_to_response("course/addnotice.html", locals(), context_instance=RequestContext(request))
+	else:
+		raise Http404

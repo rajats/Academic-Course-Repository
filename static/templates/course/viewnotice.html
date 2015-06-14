@@ -1,0 +1,26 @@
+{% extends "course/viewcourse.html" %}
+{% block course %}
+<div class="col-sm-12 col-sm-offset-3">
+	{% if reg_professor %}
+		<a class="btn btn-md btn-success pull-right" href='{% url "add_notice" course.id %}' role="button">Add Notice</a>
+	{% endif %}
+</div>
+{% if notices %}
+	<div class="col-sm-12 col-sm-offset-3">
+	<div align="center"><h2>Notice</h2></div>
+	<hr/>
+	{% for notice in notices %}
+		<h3>{{ notice.title }}</h3>
+		<h4>{{ notice.content }}</h4>
+		<h4><p align="right">added on : {{ notice.timestamp }}</p></h4>
+		<hr/>
+	{% endfor %}
+	</div>
+{% else %}
+	<br></br>
+	<div class="col-sm-12 col-sm-offset-3">
+		<div class="alert alert-info" role="alert">No notice uploaded by instructor</div>
+	</div>
+{% endif %}
+{% endblock %}
+

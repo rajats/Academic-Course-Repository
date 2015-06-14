@@ -25,4 +25,4 @@ class CourseLectureNotesForm(ModelForm):
 class CourseNoticeForm(ModelForm):
 	class Meta:
 		model = CourseNotice
-		fields = ('content',)  
+		fields = ('title','content',)  
