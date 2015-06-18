@@ -2,6 +2,11 @@
 {% load crispy_forms_tags %}
 {% block course %}
 <div align="center"><h2>Submit Assignment</h2></div>
+{% if submitted %}
+	<div class="col-sm-12 col-sm-offset-3">
+		<div class="alert alert-info" role="alert">You Have already submitte assignment, You can re-submit if you want!</div>
+	</div>
+{% endif %}
 <div class="col-sm-12 col-sm-offset-3">
 	<form method='POST' action='' enctype="multipart/form-data"> {% csrf_token %}
 		{{ form|crispy }}

@@ -204,11 +204,19 @@ def submit_assignment(request, c_id, a_id):
 		course = Course.objects.get(id=c_id)
 		course_assignment = CourseAssignment.objects.get(id=a_id)
 		student = Student.objects.get(name=reg_student)
+		submitted = False
+		if StudentAssignment.objects.filter(student=reg_student.id).exists():
+			submitted = True
 		if course in student.courses.all():
 			form = StudentAssignmentForm(request.POST or None, request.FILES or None)
 			if form.is_valid():
 				assignment = form.cleaned_data['assignment']
-				StudentAssignment.objects.create(course=course, student=reg_student , course_assignment=course_assignment ,assignment=assignment ,timestamp=timezone.now())
+				if not submitted:
+					StudentAssignment.objects.create(course=course, student=reg_student , course_assignment=course_assignment ,assignment=assignment ,timestamp=timezone.now())
+				else:
+					submitted_assignment = StudentAssignment.objects.get(student=reg_student)
+					submitted_assignment.assignment = assignment
+					submitted_assignment.save()
 				messages.success(request, 'Your assignment was submitted to the instructor!')
 				return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
 		return render_to_response("course/submitassignment.html", locals(), context_instance=RequestContext(request))
