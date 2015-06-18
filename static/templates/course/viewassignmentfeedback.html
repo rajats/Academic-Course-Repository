@@ -1,0 +1,27 @@
+{% extends "course/viewcourse.html" %}
+{% block course %}
+{% if assignment_feedbacks %}
+	<div class="col-sm-12 col-sm-offset-3">
+		<div align="center"><h2>Assignments</h2></div>
+		<hr/>
+		{% for assignment_feedback in assignment_feedbacks %}
+			{% if assignment_feedback.file_feedback %}
+				<h4><a href="{{ assignment_feedback.file_link }}">Feedback</a></h4>
+				<h4><p align="right">added on:{{ assignment_feedback.timestamp }}</p></h4>
+			{% endif %}
+			<hr/>
+			{% if assignment_feedback.text_feedback %}
+				<h4>{{ assignment_feedback.text_feedback }}</h4>
+				<h4><p align="right">added on:{{ assignment_feedback.timestamp }}</p></h4>
+			{% endif %}
+			<hr/>
+		{% endfor %}
+	</div>
+{% else %}
+	<br></br>
+	<div class="col-sm-12 col-sm-offset-3">
+		<div class="alert alert-info" role="alert">No Feedbacks for assignment</div>
+	</div>
+{% endif %}
+{% endblock %}
+

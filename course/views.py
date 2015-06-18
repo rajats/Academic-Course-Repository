@@ -272,3 +272,28 @@ def add_assignment_feedback(request, c_id , sa_id, form_type):
 			raise Http404
 	else:
 		raise Http404
+
+def view_assignment_feedback(request, c_id, sa_id):
+	if request.user.is_authenticated():
+		course = Course.objects.get(id=c_id)
+		student_assignment = StudentAssignment.objects.get(id=sa_id)
+		assignment_feedbacks = StudentAssignmentFeedback.objects.filter(student_assignment=student_assignment)
+		if RegStudent.objects.filter(user=request.user.id).exists():
+			if RegStudent.objects.get(user=request.user).active:
+				reg_student = RegStudent.objects.get(user=request.user)
+				student = Student.objects.get(name=reg_student)
+				if course in student.courses.all():
+					return render_to_response("course/viewassignmentfeedback.html", locals(), context_instance=RequestContext(request))
+				else:
+					raise Http404
+		elif RegProfessor.objects.filter(user=request.user.id).exists():
+			if RegProfessor.objects.get(user=request.user).active:
+				reg_professor = RegProfessor.objects.get(user=request.user)
+				if course in Course.objects.filter(instructor=reg_professor):
+					return render_to_response("course/viewassignmentfeedback.html", locals(), context_instance=RequestContext(request))
+				else:
+					raise Http404
+		else:
+			raise Http404
+	else:
+		raise Http404
