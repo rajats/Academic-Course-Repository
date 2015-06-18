@@ -12,4 +12,5 @@ urlpatterns = patterns('course.views',
 	url(r'^add-notice/(?P<id>.*)','add_notice', name="add_notice"), 
 	url(r'^view-feedback/(?P<id>.*)','view_feedback', name="view_feedback"), 
 	url(r'^add-feedback/(?P<id>.*)','add_feedback', name="add_feedback"), 
+	url(r'^submit-assignment/(?P<id>.*)','submit_assignment', name="submit_assignment"), 
 )

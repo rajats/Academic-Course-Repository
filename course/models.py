@@ -5,7 +5,7 @@ from django.db import models
 
 from multiselectfield import MultiSelectField
 
-from userauth.models import RegProfessor
+from userauth.models import RegProfessor, RegStudent
 
 class Course(models.Model):
 	name = models.CharField(max_length=100)
@@ -75,4 +75,10 @@ class CourseNotice(models.Model):
 class CourseFeedback(models.Model):
 	course = models.ForeignKey(Course)
 	content = models.TextField(max_length=1000, null=True, blank=True)
+	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
+
+class StudentAssignment(models.Model):
+	course = models.ForeignKey(Course)
+	student = models.ForeignKey(RegStudent, null=True, blank=True)
+	assignment = models.FileField(upload_to="studentassignments/files/")
 	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)

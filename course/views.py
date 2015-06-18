@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.utils import timezone
 
 from student.models import Student
-from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice, CourseFeedback
-from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesForm, CourseNoticeForm, CourseFeedbackForm
+from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice, CourseFeedback, StudentAssignment
+from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesForm, CourseNoticeForm, CourseFeedbackForm, StudentAssignmentForm
 
 from userauth.models import RegProfessor, RegStudent
 
@@ -195,5 +195,21 @@ def view_feedback(request, id):
 					raise Http404
 		else:
 			raise Http404
+	else:
+		raise Http404
+
+def submit_assignment(request, id):
+	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
+		reg_student = RegStudent.objects.get(user=request.user)
+		course = Course.objects.get(id=id)
+		student = Student.objects.get(name=reg_student)
+		if course in student.courses.all():
+			form = StudentAssignmentForm(request.POST or None, request.FILES or None)
+			if form.is_valid():
+				assignment = form.cleaned_data['assignment']
+				StudentAssignment.objects.create(course=course, student=reg_student , assignment=assignment ,timestamp=timezone.now())
+				messages.success(request, 'Your assignment was submitted to the instructor!')
+				return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
+		return render_to_response("course/submitassignment.html", locals(), context_instance=RequestContext(request))
 	else:
 		raise Http404

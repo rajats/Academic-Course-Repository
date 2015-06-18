@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from datetimewidget.widgets import DateTimeWidget, DateWidget, TimeWidget
 
-from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice, CourseFeedback
+from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice, CourseFeedback, StudentAssignment
 
 class CourseAssignmentForm(forms.Form):
 	description = forms.CharField()
@@ -30,6 +30,11 @@ class CourseNoticeForm(ModelForm):
 class CourseFeedbackForm(ModelForm):
 	class Meta:
 		model = CourseFeedback
-		fields = ('content',)  
+		fields = ('content',) 
+
+class StudentAssignmentForm(ModelForm):
+	class Meta:
+		model = StudentAssignment 
+		fields = ('assignment',)
 
 		

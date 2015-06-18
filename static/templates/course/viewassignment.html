@@ -15,12 +15,16 @@
 			<h4>Deadline for submission : {{ assignment.deadline }}</h4>
 			<h4><p align="right">added on:{{ assignment.timestamp }}</p></h4>
 			<hr/>
+			{% if reg_student %}
+				<a class="btn btn-md btn-success pull-right" href='{% url "submit_assignment" course.id %}' role="button">Submit Assignment</a>
+				<hr/>
+			{% endif %}
 		{% endfor %}
 	</div>
 {% else %}
 	<br></br>
 	<div class="col-sm-12 col-sm-offset-3">
-		<div class="alert alert-info" role="alert">No Lecture notes uploaded by instructor</div>
+		<div class="alert alert-info" role="alert">No assignments uploaded by instructor</div>
 	</div>
 {% endif %}
 {% endblock %}

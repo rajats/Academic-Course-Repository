@@ -16,3 +16,7 @@ def add_student_course(sender, **kwargs):
 
 new_student_course.connect(add_student_course)
 
+#class StudentAssignment(models.Model):
+#	student = models.ForeignKey(Student)
+#	assignment = models.FileField(upload_to="studentassignments/files/")
+
