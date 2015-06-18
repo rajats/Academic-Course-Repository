@@ -207,6 +207,7 @@ def submit_assignment(request, c_id, a_id):
 		submitted = False
 		if StudentAssignment.objects.filter(student=reg_student.id).exists():
 			submitted = True
+			submitted_assignment = StudentAssignment.objects.get(student=reg_student)
 		if course in student.courses.all():
 			form = StudentAssignmentForm(request.POST or None, request.FILES or None)
 			if form.is_valid():
@@ -214,7 +215,6 @@ def submit_assignment(request, c_id, a_id):
 				if not submitted:
 					StudentAssignment.objects.create(course=course, student=reg_student , course_assignment=course_assignment ,assignment=assignment ,timestamp=timezone.now())
 				else:
-					submitted_assignment = StudentAssignment.objects.get(student=reg_student)
 					submitted_assignment.assignment = assignment
 					submitted_assignment.timestamp = timezone.now()
 					submitted_assignment.save()

@@ -5,6 +5,9 @@
 {% if submitted %}
 	<div class="col-sm-12 col-sm-offset-3">
 		<div class="alert alert-info" role="alert">You Have already submitte assignment, You can re-submit if you want!</div>
+		{% if submitted_assignment %}
+			<a class="btn btn-md btn-success pull-right" href='{% url "view_assignment_feedback" course.id submitted_assignment.id %}' role="button">View Feedbacks</a>
+		{% endif %}
 	</div>
 {% endif %}
 <div class="col-sm-12 col-sm-offset-3">
