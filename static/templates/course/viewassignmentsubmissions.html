@@ -1,0 +1,21 @@
+{% extends "course/viewcourse.html" %}
+{% block course %}
+{% if submitted_assignments %}
+	<div class="col-sm-12 col-sm-offset-3">
+	<div align="center"><h2>Submissions from student</h2></div>
+	<hr/>
+	{% for submitted_assignment in submitted_assignments %}
+		<h4><a href="{{ submitted_assignment.file_link }}">Student Submission</a></h4>
+		<h4><p align="right">submitted by : {{ submitted_assignment.student }}</p></h4>
+		<h4><p align="right">submitted on : {{ submitted_assignment.timestamp }}</p></h4>
+		<hr/>
+	{% endfor %}
+	</div>
+{% else %}
+	<br></br>
+	<div class="col-sm-12 col-sm-offset-3">
+		<div class="alert alert-info" role="alert">No Submissions Received!</div>
+	</div>
+{% endif %}
+{% endblock %}
+

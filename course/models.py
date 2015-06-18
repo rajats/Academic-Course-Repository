@@ -80,5 +80,12 @@ class CourseFeedback(models.Model):
 class StudentAssignment(models.Model):
 	course = models.ForeignKey(Course)
 	student = models.ForeignKey(RegStudent, null=True, blank=True)
+	course_assignment = models.ForeignKey(CourseAssignment,null=True, blank=True)
 	assignment = models.FileField(upload_to="studentassignments/files/")
 	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
+
+	def file_link(self):
+		if self.assignment:
+			return self.assignment.url
+		else:
+			return "No attachment"

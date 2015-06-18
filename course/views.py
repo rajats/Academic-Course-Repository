@@ -198,18 +198,36 @@ def view_feedback(request, id):
 	else:
 		raise Http404
 
-def submit_assignment(request, id):
+def submit_assignment(request, c_id, a_id):
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		reg_student = RegStudent.objects.get(user=request.user)
-		course = Course.objects.get(id=id)
+		course = Course.objects.get(id=c_id)
+		course_assignment = CourseAssignment.objects.get(id=a_id)
 		student = Student.objects.get(name=reg_student)
 		if course in student.courses.all():
 			form = StudentAssignmentForm(request.POST or None, request.FILES or None)
 			if form.is_valid():
 				assignment = form.cleaned_data['assignment']
-				StudentAssignment.objects.create(course=course, student=reg_student , assignment=assignment ,timestamp=timezone.now())
+				StudentAssignment.objects.create(course=course, student=reg_student , course_assignment=course_assignment ,assignment=assignment ,timestamp=timezone.now())
 				messages.success(request, 'Your assignment was submitted to the instructor!')
 				return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
 		return render_to_response("course/submitassignment.html", locals(), context_instance=RequestContext(request))
+	else:
+		raise Http404
+
+def view_submitted_assignment(request, c_id, a_id):
+	if request.user.is_authenticated():
+		course = Course.objects.get(id=c_id)
+		if RegProfessor.objects.filter(user=request.user.id).exists():
+			if RegProfessor.objects.get(user=request.user).active:
+				reg_professor = RegProfessor.objects.get(user=request.user)
+				if course in Course.objects.filter(instructor=reg_professor):
+					course_assignment = CourseAssignment.objects.get(id=a_id)
+					submitted_assignments = StudentAssignment.objects.filter(course_assignment=course_assignment)
+					return render_to_response("course/viewassignmentsubmissions.html", locals(), context_instance=RequestContext(request))
+				else:
+					raise Http404
+		else:
+			raise Http404
 	else:
 		raise Http404

@@ -16,7 +16,10 @@
 			<h4><p align="right">added on:{{ assignment.timestamp }}</p></h4>
 			<hr/>
 			{% if reg_student %}
-				<a class="btn btn-md btn-success pull-right" href='{% url "submit_assignment" course.id %}' role="button">Submit Assignment</a>
+				<a class="btn btn-md btn-success pull-right" href='{% url "submit_assignment" course.id assignment.id %}' role="button">Submit Assignment</a>
+				<hr/>
+			{% elif reg_professor %}
+				<a class="btn btn-md btn-success pull-right" href='{% url "view_submitted_assignment" course.id assignment.id %}' role="button">View Submissions</a>
 				<hr/>
 			{% endif %}
 		{% endfor %}
