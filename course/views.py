@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.utils import timezone
 
 from student.models import Student
-from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice, CourseFeedback, StudentAssignment
-from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesForm, CourseNoticeForm, CourseFeedbackForm, StudentAssignmentForm
+from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice, CourseFeedback, StudentAssignment, StudentAssignmentFeedback
+from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesForm, CourseNoticeForm, CourseFeedbackForm, StudentAssignmentForm, StudentAssignmentFeedbackFileForm, StudentAssignmentFeedbackTextForm
 
 from userauth.models import RegProfessor, RegStudent
 
@@ -216,6 +216,7 @@ def submit_assignment(request, c_id, a_id):
 				else:
 					submitted_assignment = StudentAssignment.objects.get(student=reg_student)
 					submitted_assignment.assignment = assignment
+					submitted_assignment.timestamp = timezone.now()
 					submitted_assignment.save()
 				messages.success(request, 'Your assignment was submitted to the instructor!')
 				return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
@@ -233,6 +234,38 @@ def view_submitted_assignment(request, c_id, a_id):
 					course_assignment = CourseAssignment.objects.get(id=a_id)
 					submitted_assignments = StudentAssignment.objects.filter(course_assignment=course_assignment)
 					return render_to_response("course/viewassignmentsubmissions.html", locals(), context_instance=RequestContext(request))
+				else:
+					raise Http404
+		else:
+			raise Http404
+	else:
+		raise Http404
+
+def add_assignment_feedback(request, c_id , sa_id, form_type):
+	if request.user.is_authenticated():
+		course = Course.objects.get(id=c_id)
+		if RegProfessor.objects.filter(user=request.user.id).exists():
+			if RegProfessor.objects.get(user=request.user).active:
+				reg_professor = RegProfessor.objects.get(user=request.user)
+				if course in Course.objects.filter(instructor=reg_professor):
+					student_assignment = StudentAssignment.objects.get(id=sa_id)
+					student = student_assignment.student
+					form_type = int (form_type)
+					if form_type == 1:
+						form = StudentAssignmentFeedbackFileForm(request.POST or None, request.FILES or None)
+						if form.is_valid():
+							file_feedback = form.cleaned_data['file_feedback']
+							StudentAssignmentFeedback.objects.create(student_assignment=student_assignment,file_feedback=file_feedback, timestamp=timezone.now())
+							messages.success(request, 'Your feedback was shared with the student!')
+							return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
+					elif form_type == 2:
+						form = StudentAssignmentFeedbackTextForm(request.POST or None)
+						if form.is_valid():
+							text_feedback = form.cleaned_data['text_feedback']
+							StudentAssignmentFeedback.objects.create(student_assignment=student_assignment,text_feedback=text_feedback, timestamp=timezone.now())
+							messages.success(request, 'Your feedback was shared with the student!')
+							return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
+					return render_to_response("course/addassignmentfeedback.html", locals(), context_instance=RequestContext(request))
 				else:
 					raise Http404
 		else:

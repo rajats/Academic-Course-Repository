@@ -1,0 +1,12 @@
+{% extends "course/viewcourse.html" %}
+{% load crispy_forms_tags %}
+{% block course %}
+<div align="center"><h2>Give Feedback of Assignment Submission</h2></div>
+<div class="col-sm-12 col-sm-offset-3">
+	<form method='POST' action='' enctype="multipart/form-data"> {% csrf_token %}
+		{{ form|crispy }}
+		<input class='btn btn-default' type='submit' value='add'/>
+	</form> 
+</div>
+{% endblock %}
+

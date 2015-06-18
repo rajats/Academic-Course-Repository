@@ -8,6 +8,9 @@
 		<h4><a href="{{ submitted_assignment.file_link }}">Student Submission</a></h4>
 		<h4><p align="right">submitted by : {{ submitted_assignment.student }}</p></h4>
 		<h4><p align="right">submitted on : {{ submitted_assignment.timestamp }}</p></h4>
+		<a class="btn btn-md btn-success pull-right" href='{% url "add_assignment_feedback" course.id submitted_assignment.id 2 %}' role="button">Give Feedback as Text</a>
+		<br></br>
+		<a class="btn btn-md btn-success pull-right" href='{% url "add_assignment_feedback" course.id submitted_assignment.id 1 %}' role="button">Give Feedback in File</a>
 		<hr/>
 	{% endfor %}
 	</div>

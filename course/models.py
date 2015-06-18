@@ -89,3 +89,16 @@ class StudentAssignment(models.Model):
 			return self.assignment.url
 		else:
 			return "No attachment"
+
+class StudentAssignmentFeedback(models.Model):
+	student_assignment = models.ForeignKey(StudentAssignment)
+	file_feedback =  models.FileField(upload_to="studentassignmentsfeedbacks/files/", null=True, blank=True)
+	text_feedback = models.TextField(max_length=1000, null=True, blank=True)
+	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
+
+	def file_link(self):
+		if self.file_feedback:
+			return self.file_feedback.url
+		else:
+			return "No attachment"
+
