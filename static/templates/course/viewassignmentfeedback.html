@@ -1,5 +1,6 @@
 {% extends "course/viewcourse.html" %}
 {% block course %}
+{% load crispy_forms_tags %}
 {% if assignment_feedbacks %}
 	<div class="col-sm-12 col-sm-offset-3">
 		<div align="center"><h2>Assignments</h2></div>
@@ -16,6 +17,10 @@
 			{% endif %}
 			<hr/>
 		{% endfor %}
+		<form method='POST' action=''> {% csrf_token %}
+    		{{ form|crispy }}
+			<button type="submit" class="btn btn-primary" ><span class="glyphicon glyphicon-comment" aria-hidden="true"></span>Post Comment</button>
+		</form>
 	</div>
 {% else %}
 	<br></br>

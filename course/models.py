@@ -2,6 +2,7 @@
 import os
 
 from django.db import models
+from django.contrib.auth.models import User
 
 from multiselectfield import MultiSelectField
 
@@ -102,3 +103,11 @@ class StudentAssignmentFeedback(models.Model):
 		else:
 			return "No attachment"
 
+class StudentAssignmentFeedbackComments(models.Model):
+	student_assignment = models.ForeignKey(StudentAssignment)
+	commenter = models.ForeignKey(User, null=True, blank=True)
+	comment = models.TextField(max_length=1000, null=True, blank=True)
+	timestamp = models.DateTimeField(auto_now=False, auto_now_add=True, null=True, blank=True)
+
+	def __unicode__(self):
+		return str(self.comment)

@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.utils import timezone
 
 from student.models import Student
-from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice, CourseFeedback, StudentAssignment, StudentAssignmentFeedback
-from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesForm, CourseNoticeForm, CourseFeedbackForm, StudentAssignmentForm, StudentAssignmentFeedbackFileForm, StudentAssignmentFeedbackTextForm
+from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice, CourseFeedback, StudentAssignment, StudentAssignmentFeedback, StudentAssignmentFeedbackComments
+from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesForm, CourseNoticeForm, CourseFeedbackForm, StudentAssignmentForm, StudentAssignmentFeedbackFileForm, StudentAssignmentFeedbackTextForm, StudentAssignmentFeedbackCommentsForm
 
 from userauth.models import RegProfessor, RegStudent
 
@@ -278,11 +278,18 @@ def view_assignment_feedback(request, c_id, sa_id):
 		course = Course.objects.get(id=c_id)
 		student_assignment = StudentAssignment.objects.get(id=sa_id)
 		assignment_feedbacks = StudentAssignmentFeedback.objects.filter(student_assignment=student_assignment)
+		form = StudentAssignmentFeedbackCommentsForm()
 		if RegStudent.objects.filter(user=request.user.id).exists():
 			if RegStudent.objects.get(user=request.user).active:
 				reg_student = RegStudent.objects.get(user=request.user)
 				student = Student.objects.get(name=reg_student)
 				if course in student.courses.all():
+					if request.method=='POST':
+						form=StudentAssignmentFeedbackCommentsForm(request.POST)
+						if form.is_valid():
+							comment_text = form.cleaned_data['comment']
+							StudentAssignmentFeedbackComments.objects.create(student_assignment=student_assignment, commenter=request.user, comment=comment_text, timestamp=timezone.now())
+							messages.success(request, "Your comment was added")
 					return render_to_response("course/viewassignmentfeedback.html", locals(), context_instance=RequestContext(request))
 				else:
 					raise Http404
@@ -290,6 +297,12 @@ def view_assignment_feedback(request, c_id, sa_id):
 			if RegProfessor.objects.get(user=request.user).active:
 				reg_professor = RegProfessor.objects.get(user=request.user)
 				if course in Course.objects.filter(instructor=reg_professor):
+					if request.method=='POST':
+						form=StudentAssignmentFeedbackCommentsForm(request.POST)
+						if form.is_valid():
+							comment_text = form.cleaned_data['comment']
+							StudentAssignmentFeedbackComments.objects.create(student_assignment=student_assignment, commenter=request.user, comment=comment_text, timestamp=timezone.now())
+							messages.success(request, "Your comment was added")
 					return render_to_response("course/viewassignmentfeedback.html", locals(), context_instance=RequestContext(request))
 				else:
 					raise Http404
