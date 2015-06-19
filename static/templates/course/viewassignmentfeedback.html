@@ -17,6 +17,13 @@
 			{% endif %}
 			<hr/>
 		{% endfor %}
+		{% if comments %}
+			<h3>Comments</h3>
+			{% for comment in comments %}
+				<p>{{ comment.commenter }} : {{ comment.comment }}</p>  
+        		<hr>  
+			{% endfor %}
+		{% endif %}
 		<form method='POST' action=''> {% csrf_token %}
     		{{ form|crispy }}
 			<button type="submit" class="btn btn-primary" ><span class="glyphicon glyphicon-comment" aria-hidden="true"></span>Post Comment</button>

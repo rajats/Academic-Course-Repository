@@ -278,6 +278,7 @@ def view_assignment_feedback(request, c_id, sa_id):
 		course = Course.objects.get(id=c_id)
 		student_assignment = StudentAssignment.objects.get(id=sa_id)
 		assignment_feedbacks = StudentAssignmentFeedback.objects.filter(student_assignment=student_assignment)
+		comments = StudentAssignmentFeedbackComments.objects.filter(student_assignment=student_assignment)
 		form = StudentAssignmentFeedbackCommentsForm()
 		if RegStudent.objects.filter(user=request.user.id).exists():
 			if RegStudent.objects.get(user=request.user).active:
