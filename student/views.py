@@ -89,4 +89,19 @@ def enroll(request, id):
 	else:
 		raise Http404
 
+def leave_course(request, id):
+	"""
+	Allows student to leave a course
+	"""
+	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
+		course = Course.objects.get(id=id)
+		reg_student = RegStudent.objects.get(user=request.user)
+		student = Student.objects.get(name=reg_student)
+		student.courses.remove(course)
+		messages.success(request, 'You have dropped the course %s' %(course))
+		return HttpResponseRedirect('/student/mycourses/')
+	else:
+		raise Http404
+
+
 

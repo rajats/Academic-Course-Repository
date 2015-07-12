@@ -5,4 +5,5 @@ urlpatterns = patterns('student.views',
 	url(r'^courses/$','show_courses', name="show_courses"), 
 	url(r'^mycourses/$','my_courses', name="my_courses"), 
     url(r'^enroll/(?P<id>.*)','enroll', name="enroll"),
+    url(r'^leave-course/(?P<id>.*)','leave_course', name="leave_course"),
 )
