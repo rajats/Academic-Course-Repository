@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, RequestContext, Http404, HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -241,21 +243,26 @@ def submit_assignment(request, c_id, a_id):
 		course_assignment = CourseAssignment.objects.get(id=a_id)
 		student = Student.objects.get(name=reg_student)
 		submitted = False
-		if StudentAssignment.objects.filter(student=reg_student.id).exists():
-			submitted = True
-			submitted_assignment = StudentAssignment.objects.get(student=reg_student)
-		if course in student.courses.all():
-			form = StudentAssignmentForm(request.POST or None, request.FILES or None)
-			if form.is_valid():
-				assignment = form.cleaned_data['assignment']
-				if not submitted:
-					StudentAssignment.objects.create(course=course, student=reg_student , course_assignment=course_assignment ,assignment=assignment ,timestamp=timezone.now())
-				else:
-					submitted_assignment.assignment = assignment
-					submitted_assignment.timestamp = timezone.now()
-					submitted_assignment.save()
-				messages.success(request, 'Your assignment was submitted to the instructor!')
-				return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
+		deadline_passed = False
+		deadline = course_assignment.deadline
+		if deadline > timezone.now():
+			if StudentAssignment.objects.filter(student=reg_student.id).exists():
+				submitted = True
+				submitted_assignment = StudentAssignment.objects.get(student=reg_student)
+			if course in student.courses.all():
+				form = StudentAssignmentForm(request.POST or None, request.FILES or None)
+				if form.is_valid():
+					assignment = form.cleaned_data['assignment']
+					if not submitted:
+						StudentAssignment.objects.create(course=course, student=reg_student , course_assignment=course_assignment ,assignment=assignment ,timestamp=timezone.now())
+					else:
+						submitted_assignment.assignment = assignment
+						submitted_assignment.timestamp = timezone.now()
+						submitted_assignment.save()
+					messages.success(request, 'Your assignment was submitted to the instructor!')
+					return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
+		else:
+			deadline_passed = True
 		return render_to_response("course/submitassignment.html", locals(), context_instance=RequestContext(request))
 	else:
 		raise Http404

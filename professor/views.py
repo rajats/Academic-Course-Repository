@@ -12,7 +12,7 @@ def my_teaching_courses(request):
 	if request.user.is_authenticated() and RegProfessor.objects.get(user=request.user).active:
 		reg_professor = RegProfessor.objects.get(user=request.user)
 		courses = Course.objects.filter(instructor=reg_professor)
-		return render_to_response("professor/myteachingcourses.html", locals(), context_instance=RequestContext(request))
 	else:
-		raise Http404
+		messages.error(request, 'Your account is not active yet, please conatct admin.')
+	return render_to_response("professor/myteachingcourses.html", locals(), context_instance=RequestContext(request))
 
