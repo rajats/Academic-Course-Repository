@@ -43,7 +43,6 @@ INSTALLED_APPS = (
     'endless_pagination',
     'multiselectfield',
     'course',
-    'notification',
     'student',
     'professor',
     'userauth',
