@@ -11,51 +11,74 @@ from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesF
 
 from userauth.models import RegProfessor, RegStudent
 
+def verify_valid_student(request, id, course):
+	"""
+	Verifies that student accessing the course is enrolled in course
+	"""
+	if RegStudent.objects.filter(user=request.user.id).exists():
+		if RegStudent.objects.get(user=request.user).active:
+			reg_student = RegStudent.objects.get(user=request.user)
+			student = Student.objects.get(name=reg_student)
+			if course in student.courses.all():
+				return [True, reg_student]
+	return [False]
+
+def verify_valid_professor(request, id, course):
+	"""
+	Verifies that professor accessing the course is instructor of course
+	"""
+	if RegProfessor.objects.filter(user=request.user.id).exists():
+		if RegProfessor.objects.get(user=request.user).active:
+			reg_professor = RegProfessor.objects.get(user=request.user)
+			if course in Course.objects.filter(instructor=reg_professor):
+				return [True, reg_professor]
+	return [False]
+
 def view_course(request, id):
+	"""
+	Shows course notice in course Layout.Course Notice is home page of a course
+	"""
 	if request.user.is_authenticated():
 		course = Course.objects.get(id=id)
 		notices = CourseNotice.objects.filter(course=course)
-		if RegStudent.objects.filter(user=request.user.id).exists():
-			if RegStudent.objects.get(user=request.user).active:
-				reg_student = RegStudent.objects.get(user=request.user)
-				student = Student.objects.get(name=reg_student)
-				if course in student.courses.all():
-					return render_to_response("course/viewnotice.html", locals(), context_instance=RequestContext(request))
-		elif RegProfessor.objects.filter(user=request.user.id).exists():
-			if RegProfessor.objects.get(user=request.user).active:
-				reg_professor = RegProfessor.objects.get(user=request.user)
-				if course in Course.objects.filter(instructor=reg_professor):
-					return render_to_response("course/viewnotice.html", locals(), context_instance=RequestContext(request))
+		valid_student = verify_valid_student(request, id, course)
+		if valid_student[0]:
+			reg_student = valid_student[1]
+			return render_to_response("course/viewnotice.html", locals(), context_instance=RequestContext(request))
+		valid_professor = verify_valid_professor(request, id, course)
+		if valid_professor[0]:
+			reg_professor = valid_professor[1]
+			return render_to_response("course/viewnotice.html", locals(), context_instance=RequestContext(request))
 		else:
 			raise Http404
 	else:
 		raise Http404
 
 def view_assignment(request, id):
+	"""
+	Shows course assignment in course Layout.If course instructor is viewing
+	assignment then there is a button for adding assignment
+	"""
 	if request.user.is_authenticated():
 		course = Course.objects.get(id=id)
 		assignments = CourseAssignment.objects.filter(course=course)
-		if RegStudent.objects.filter(user=request.user.id).exists():
-			if RegStudent.objects.get(user=request.user).active:
-				reg_student = RegStudent.objects.get(user=request.user)
-				student = Student.objects.get(name=reg_student)
-				if course in student.courses.all():
-					return render_to_response("course/viewassignment.html", locals(), context_instance=RequestContext(request))
-				else:
-					raise Http404
-		elif RegProfessor.objects.filter(user=request.user.id).exists():
-			if RegProfessor.objects.get(user=request.user).active:
-				reg_professor = RegProfessor.objects.get(user=request.user)
-				if course in Course.objects.filter(instructor=reg_professor):
-					return render_to_response("course/viewassignment.html", locals(), context_instance=RequestContext(request))
-				else:
-					raise Http404
+		valid_student = verify_valid_student(request, id, course)
+		if valid_student[0]:
+			reg_student = valid_student[1]
+			return render_to_response("course/viewassignment.html", locals(), context_instance=RequestContext(request))
+		valid_professor = verify_valid_professor(request, id, course)
+		if valid_professor[0]:
+			reg_professor = valid_professor[1]
+			return render_to_response("course/viewassignment.html", locals(), context_instance=RequestContext(request))
 		else:
 			raise Http404
 	else:
 		raise Http404
 
 def add_assignment(request, id):
+	"""
+	Allows course instructor to add a course assignment
+	"""
 	if request.user.is_authenticated() and RegProfessor.objects.get(user=request.user).active:
 		reg_professor = RegProfessor.objects.get(user=request.user)
 		course = Course.objects.get(id=id)
@@ -73,30 +96,30 @@ def add_assignment(request, id):
 		raise Http404
 
 def view_syllabus(request, id):
+	"""
+	Shows course Syllabus in course Layout.If course instructor is viewing
+	syllabus then there is a button for adding syllabus
+	"""
 	if request.user.is_authenticated():
 		course = Course.objects.get(id=id)
 		syllabuses = CourseSyllabus.objects.filter(course=course)
-		if RegStudent.objects.filter(user=request.user.id).exists():
-			if RegStudent.objects.get(user=request.user).active:
-				reg_student = RegStudent.objects.get(user=request.user)
-				student = Student.objects.get(name=reg_student)
-				if course in student.courses.all():
-					return render_to_response("course/viewsyllabus.html", locals(), context_instance=RequestContext(request))
-				else:
-					raise Http404
-		elif RegProfessor.objects.filter(user=request.user.id).exists():
-			if RegProfessor.objects.get(user=request.user).active:
-				reg_professor = RegProfessor.objects.get(user=request.user)
-				if course in Course.objects.filter(instructor=reg_professor):
-					return render_to_response("course/viewsyllabus.html", locals(), context_instance=RequestContext(request))
-				else:
-					raise Http404
+		valid_student = verify_valid_student(request, id, course)
+		if valid_student[0]:
+			reg_student = valid_student[1]
+			return render_to_response("course/viewsyllabus.html", locals(), context_instance=RequestContext(request))
+		valid_professor = verify_valid_professor(request, id, course)
+		if valid_professor[0]:
+			reg_professor = valid_professor[1]
+			return render_to_response("course/viewsyllabus.html", locals(), context_instance=RequestContext(request))
 		else:
 			raise Http404
 	else:
 		raise Http404
 
 def add_syllabus(request, id):
+	"""
+	Allows course instructor to add course syllabus
+	"""
 	if request.user.is_authenticated() and RegProfessor.objects.get(user=request.user).active:
 		reg_professor = RegProfessor.objects.get(user=request.user)
 		course = Course.objects.get(id=id)
@@ -112,30 +135,30 @@ def add_syllabus(request, id):
 		raise Http404
 
 def view_lecture_notes(request, id):
+	"""
+	Shows course lecture notes in course Layout.If course instructor is viewing
+	lecture notes then there is a button for adding lecture note
+	"""
 	if request.user.is_authenticated():
 		course = Course.objects.get(id=id)
 		lecture_notes = CourseLectureNotes.objects.filter(course=course)
-		if RegStudent.objects.filter(user=request.user.id).exists():
-			if RegStudent.objects.get(user=request.user).active:
-				reg_student = RegStudent.objects.get(user=request.user)
-				student = Student.objects.get(name=reg_student)
-				if course in student.courses.all():
-					return render_to_response("course/viewlecturenotes.html", locals(), context_instance=RequestContext(request))
-				else:
-					raise Http404
-		elif RegProfessor.objects.filter(user=request.user.id).exists():
-			if RegProfessor.objects.get(user=request.user).active:
-				reg_professor = RegProfessor.objects.get(user=request.user)
-				if course in Course.objects.filter(instructor=reg_professor):
-					return render_to_response("course/viewlecturenotes.html", locals(), context_instance=RequestContext(request))
-				else:
-					raise Http404
+		valid_student = verify_valid_student(request, id, course)
+		if valid_student[0]:
+			reg_student = valid_student[1]
+			return render_to_response("course/viewlecturenotes.html", locals(), context_instance=RequestContext(request))
+		valid_professor = verify_valid_professor(request, id, course)
+		if valid_professor[0]:
+			reg_professor = valid_professor[1]
+			return render_to_response("course/viewlecturenotes.html", locals(), context_instance=RequestContext(request))
 		else:
 			raise Http404
 	else:
 		raise Http404
 
 def add_lecture_notes(request, id):
+	"""
+	Allows course instructor to add lecture notes of course
+	"""
 	if request.user.is_authenticated() and RegProfessor.objects.get(user=request.user).active:
 		reg_professor = RegProfessor.objects.get(user=request.user)
 		course = Course.objects.get(id=id)
@@ -151,6 +174,9 @@ def add_lecture_notes(request, id):
 		raise Http404
 
 def add_notice(request, id):
+	"""
+	Allows course instructor to add course notice
+	"""
 	if request.user.is_authenticated() and RegProfessor.objects.get(user=request.user).active:
 		reg_professor = RegProfessor.objects.get(user=request.user)
 		course = Course.objects.get(id=id)
@@ -167,6 +193,9 @@ def add_notice(request, id):
 		raise Http404
 
 def add_feedback(request, id):
+	"""
+	Allows student to give feedback for the course without revealing their identities
+	"""
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		reg_student = RegStudent.objects.get(user=request.user)
 		course = Course.objects.get(id=id)
@@ -183,6 +212,9 @@ def add_feedback(request, id):
 		raise Http404
 
 def view_feedback(request, id):
+	"""
+	Allows course instructor to view course feedback from students enrolled in course
+	"""
 	if request.user.is_authenticated():
 		course = Course.objects.get(id=id)
 		if RegProfessor.objects.filter(user=request.user.id).exists():
@@ -199,6 +231,10 @@ def view_feedback(request, id):
 		raise Http404
 
 def submit_assignment(request, c_id, a_id):
+	"""
+	Allows student to submit course assignment.Student can submit assignment multiple
+	times before deadline.Only Last submission will be shown to the instructor
+	"""
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		reg_student = RegStudent.objects.get(user=request.user)
 		course = Course.objects.get(id=c_id)
@@ -225,6 +261,10 @@ def submit_assignment(request, c_id, a_id):
 		raise Http404
 
 def view_submitted_assignment(request, c_id, a_id):
+	"""
+	Allows course instructor to view submission of assignment from all students who 
+	submitted assignment
+	"""
 	if request.user.is_authenticated():
 		course = Course.objects.get(id=c_id)
 		if RegProfessor.objects.filter(user=request.user.id).exists():
@@ -242,6 +282,10 @@ def view_submitted_assignment(request, c_id, a_id):
 		raise Http404
 
 def add_assignment_feedback(request, c_id , sa_id, form_type):
+	"""
+	Allows course instructor to give feedback to each submission of assignment.
+	Feedback can be in form of file or as comment text
+	"""
 	if request.user.is_authenticated():
 		course = Course.objects.get(id=c_id)
 		if RegProfessor.objects.filter(user=request.user.id).exists():
@@ -274,6 +318,9 @@ def add_assignment_feedback(request, c_id , sa_id, form_type):
 		raise Http404
 
 def view_assignment_feedback(request, c_id, sa_id):
+	"""
+	Allows students and instructor to view feedback and discuss it in form of comment
+	"""
 	if request.user.is_authenticated():
 		course = Course.objects.get(id=c_id)
 		student_assignment = StudentAssignment.objects.get(id=sa_id)

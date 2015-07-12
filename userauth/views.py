@@ -11,6 +11,9 @@ from .signals import new_student, new_professor
 User = get_user_model()
 
 def signin(request):
+	"""
+	Allows registered users to sign in 
+	"""
 	form = LoginForm(request.POST or None)
 	if form.is_valid():
 		username = form.cleaned_data['username']
@@ -30,6 +33,11 @@ def signin(request):
 
 
 def register_student(request):
+	"""
+	Allows a new student to register themselves with restrictions
+	in registration form to a particular college. All acount will remain
+	inactive until admin activates it
+	"""
 	form = RegistrationFormStudent(request.POST or None)
 	if form.is_valid():
 		username = form.cleaned_data['username']
@@ -51,6 +59,10 @@ def register_student(request):
 	return render(request, "userauth/regform.html",context)
 
 def register_professor(request):
+	"""
+	Allows new professor to register themselves.Account will been
+	activated by admin after verifying details
+	"""
 	form = RegistrationFormProfessor(request.POST or None)
 	if form.is_valid():
 		username = form.cleaned_data['username']
@@ -67,11 +79,18 @@ def register_professor(request):
 	return render(request, "userauth/regform.html",context)
 
 def signout(request):
+	"""
+	Allows registered users to sign out from site
+	"""
 	logout(request)
 	messages.success(request,"You have logged out")
 	return HttpResponseRedirect('/userauth/login/')
 
 def account_info(request):
+	"""
+	Shows the account information of a student with all fields disabled
+	except semester which is only for testing purpose
+	"""
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		try:
 			reg_student = RegStudent.objects.get(user=request.user)

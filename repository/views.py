@@ -5,6 +5,9 @@ from django.db.models import Count
 from userauth.models import RegStudent, RegProfessor
 
 def home(request):
+	"""
+	Shows the home page of Academic Course Repository with option for Login and Registration
+	"""
 	if RegStudent.objects.filter(user=request.user.id).exists():
 		reg_student = RegStudent.objects.get(user=request.user)
 	elif RegProfessor.objects.filter(user=request.user.id).exists():

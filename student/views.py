@@ -8,6 +8,10 @@ from userauth.models import RegStudent
 from .models import Student
 
 def show_courses(request):
+	"""
+	Shows the courses in which a student can enroll. A student can only enroll in all
+	compulsary courses but only in one elective courses 
+	"""
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		try:
 			reg_student = RegStudent.objects.get(user=request.user)
@@ -17,7 +21,6 @@ def show_courses(request):
 		except RegStudent.DoesNotExist:
 			student_sem = None
 		try:
-			print student_sem, student_programme
 			courses = Course.objects.filter(semester=student_sem)
 			unenrolled_compulsary_courses, unenrolled_elective1_courses, unenrolled_elective2_courses, unenrolled_elective3_courses = [],[],[],[]
 			elective_one, elective_two, elective_three = False, False, False
@@ -54,6 +57,9 @@ def show_courses(request):
 		return render_to_response("student/enroll.html", locals(), context_instance=RequestContext(request))
 
 def my_courses(request):
+	"""
+	Shows the courses in which student is already enrolled
+	"""
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		try:
 			reg_student = RegStudent.objects.get(user=request.user)
@@ -70,6 +76,9 @@ def my_courses(request):
 		return render_to_response("student/mycourses.html", locals(), context_instance=RequestContext(request))
 
 def enroll(request, id):
+	"""
+	Allows student to enroll in a course
+	"""
 	if request.user.is_authenticated() and RegStudent.objects.get(user=request.user).active:
 		course = Course.objects.get(id=id)
 		reg_student = RegStudent.objects.get(user=request.user)
