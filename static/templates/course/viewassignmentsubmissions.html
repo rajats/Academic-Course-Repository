@@ -8,8 +8,10 @@
 		<h4><a href="{{ submitted_assignment.file_link }}">Student Submission</a></h4>
 		<h4><p align="right">submitted by : {{ submitted_assignment.student }}</p></h4>
 		<h4><p align="right">submitted on : {{ submitted_assignment.timestamp }}</p></h4>
-		<a class="btn btn-md btn-success pull-right" href='{% url "view_assignment_feedback" course.id submitted_assignment.id %}' role="button">View Feedbacks</a>
-		<a class="btn btn-md btn-success pull-right" href='{% url "add_assignment_feedback" course.id submitted_assignment.id %}' role="button">Give Feedback</a>
+		<div class="btn-toolbar" align="right">
+			<a class="btn btn-md btn-success" href='{% url "view_assignment_feedback" course.id submitted_assignment.id %}' role="button">View Feedbacks</a>
+			<a class="btn btn-md btn-success" href='{% url "add_assignment_feedback" course.id submitted_assignment.id %}' role="button">Give Feedback</a>
+		</div>
 		<hr/>
 	{% endfor %}
 	</div>

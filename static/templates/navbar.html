@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block navbar %}
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top" style="background:#F0F0F0 !important">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -34,7 +34,7 @@
             <div class="navbar-form navbar-right">
             <ul class="nav navbar-nav navbar-right">
               <li>
-                  <font color="green"><h3>Instructor</h3></font>
+                  <font color="green"><h4>Instructor</h4></font>
                 </li>
               <li><a href='{% url "my_teaching_courses" %}'><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>My courses</a></li>
               <li class="dropdown">
