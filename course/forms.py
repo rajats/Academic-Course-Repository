@@ -37,15 +37,10 @@ class StudentAssignmentForm(ModelForm):
 		model = StudentAssignment 
 		fields = ('assignment',)
 
-class StudentAssignmentFeedbackFileForm(ModelForm):
+class StudentAssignmentFeedbackForm(ModelForm):
 	class Meta:
 		model = StudentAssignmentFeedback
-		fields = ('file_feedback',)
-
-class StudentAssignmentFeedbackTextForm(ModelForm):
-	class Meta:
-		model = StudentAssignmentFeedback
-		fields = ('text_feedback',)
+		fields = ('file_feedback', 'text_feedback',)
 
 class StudentAssignmentFeedbackCommentsForm(ModelForm):
 	class Meta:

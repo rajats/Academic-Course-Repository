@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from student.models import Student
 from .models import Course, CourseAssignment, CourseSyllabus, CourseLectureNotes, CourseNotice, CourseFeedback, StudentAssignment, StudentAssignmentFeedback, StudentAssignmentFeedbackComments
-from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesForm, CourseNoticeForm, CourseFeedbackForm, StudentAssignmentForm, StudentAssignmentFeedbackFileForm, StudentAssignmentFeedbackTextForm, StudentAssignmentFeedbackCommentsForm
+from .forms import CourseAssignmentForm, CourseSyllabusForm, CourseLectureNotesForm, CourseNoticeForm, CourseFeedbackForm, StudentAssignmentForm, StudentAssignmentFeedbackForm, StudentAssignmentFeedbackCommentsForm
 
 from userauth.models import RegProfessor, RegStudent
 
@@ -245,10 +245,10 @@ def submit_assignment(request, c_id, a_id):
 		submitted = False
 		deadline_passed = False
 		deadline = course_assignment.deadline
+		if StudentAssignment.objects.filter(student=reg_student.id, course_assignment=course_assignment):
+			submitted = True
+			submitted_assignment = StudentAssignment.objects.get(student=reg_student, course_assignment=course_assignment)
 		if deadline > timezone.now():
-			if StudentAssignment.objects.filter(student=reg_student.id).exists():
-				submitted = True
-				submitted_assignment = StudentAssignment.objects.get(student=reg_student)
 			if course in student.courses.all():
 				form = StudentAssignmentForm(request.POST or None, request.FILES or None)
 				if form.is_valid():
@@ -288,7 +288,7 @@ def view_submitted_assignment(request, c_id, a_id):
 	else:
 		raise Http404
 
-def add_assignment_feedback(request, c_id , sa_id, form_type):
+def add_assignment_feedback(request, c_id , sa_id):
 	"""
 	Allows course instructor to give feedback to each submission of assignment.
 	Feedback can be in form of file or as comment text
@@ -301,21 +301,16 @@ def add_assignment_feedback(request, c_id , sa_id, form_type):
 				if course in Course.objects.filter(instructor=reg_professor):
 					student_assignment = StudentAssignment.objects.get(id=sa_id)
 					student = student_assignment.student
-					form_type = int (form_type)
-					if form_type == 1:
-						form = StudentAssignmentFeedbackFileForm(request.POST or None, request.FILES or None)
-						if form.is_valid():
-							file_feedback = form.cleaned_data['file_feedback']
-							StudentAssignmentFeedback.objects.create(student_assignment=student_assignment,file_feedback=file_feedback, timestamp=timezone.now())
-							messages.success(request, 'Your feedback was shared with the student!')
-							return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
-					elif form_type == 2:
-						form = StudentAssignmentFeedbackTextForm(request.POST or None)
-						if form.is_valid():
-							text_feedback = form.cleaned_data['text_feedback']
-							StudentAssignmentFeedback.objects.create(student_assignment=student_assignment,text_feedback=text_feedback, timestamp=timezone.now())
-							messages.success(request, 'Your feedback was shared with the student!')
-							return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
+					form = StudentAssignmentFeedbackForm(request.POST or None, request.FILES or None)
+					if form.is_valid():
+						file_feedback = form.cleaned_data['file_feedback']
+						text_feedback = form.cleaned_data['text_feedback']
+						if not file_feedback and not text_feedback:
+							messages.warning(request, 'Empty feedbacks are not allowed')
+							return HttpResponseRedirect(reverse('add_assignment_feedback', kwargs={'c_id' : c_id, 'sa_id' : sa_id}))
+						StudentAssignmentFeedback.objects.create(student_assignment=student_assignment,file_feedback=file_feedback, text_feedback=text_feedback, timestamp=timezone.now())
+						messages.success(request, 'Your feedback was shared with the student!')
+						return HttpResponseRedirect(reverse('view_assignment_feedback', kwargs={'c_id' : c_id, 'sa_id' : sa_id})) 
 					return render_to_response("course/addassignmentfeedback.html", locals(), context_instance=RequestContext(request))
 				else:
 					raise Http404
@@ -339,14 +334,17 @@ def view_assignment_feedback(request, c_id, sa_id):
 				reg_student = RegStudent.objects.get(user=request.user)
 				student = Student.objects.get(name=reg_student)
 				if course in student.courses.all():
-					if request.method=='POST':
+					if request.method == 'POST':
 						form=StudentAssignmentFeedbackCommentsForm(request.POST)
 						if form.is_valid():
 							comment_text = form.cleaned_data['comment']
 							StudentAssignmentFeedbackComments.objects.create(student_assignment=student_assignment, commenter=request.user, comment=comment_text, timestamp=timezone.now())
 							messages.success(request, "Your comment was added")
+							return HttpResponseRedirect(reverse('view_assignment_feedback', kwargs={'c_id' : c_id, 'sa_id' : sa_id})) 
 					return render_to_response("course/viewassignmentfeedback.html", locals(), context_instance=RequestContext(request))
 				else:
+					raise Http404
+			else:
 					raise Http404
 		elif RegProfessor.objects.filter(user=request.user.id).exists():
 			if RegProfessor.objects.get(user=request.user).active:
@@ -358,6 +356,7 @@ def view_assignment_feedback(request, c_id, sa_id):
 							comment_text = form.cleaned_data['comment']
 							StudentAssignmentFeedbackComments.objects.create(student_assignment=student_assignment, commenter=request.user, comment=comment_text, timestamp=timezone.now())
 							messages.success(request, "Your comment was added")
+							return HttpResponseRedirect(reverse('view_assignment_feedback', kwargs={'c_id' : c_id, 'sa_id' : sa_id})) 
 					return render_to_response("course/viewassignmentfeedback.html", locals(), context_instance=RequestContext(request))
 				else:
 					raise Http404

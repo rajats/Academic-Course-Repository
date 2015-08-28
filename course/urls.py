@@ -14,6 +14,6 @@ urlpatterns = patterns('course.views',
 	url(r'^add-feedback/(?P<id>.*)','add_feedback', name="add_feedback"), 
 	url(r'^submit-assignment/(?P<c_id>[-\w]+)/(?P<a_id>[-\w\ ]+)/$','submit_assignment', name="submit_assignment"), 
 	url(r'^view-submitted-assignments/(?P<c_id>[-\w]+)/(?P<a_id>[-\w\ ]+)/$','view_submitted_assignment', name="view_submitted_assignment"), 
-	url(r'^add-assignment-feedback/(?P<c_id>[-\w]+)/(?P<sa_id>[-\w]+)/(?P<form_type>[-\w\ ]+)/$','add_assignment_feedback', name="add_assignment_feedback"), 	
+	url(r'^add-assignment-feedback/(?P<c_id>[-\w]+)/(?P<sa_id>[-\w\ ]+)/$','add_assignment_feedback', name="add_assignment_feedback"), 	
 	url(r'^view-assignment-feedback/(?P<c_id>[-\w]+)/(?P<sa_id>[-\w\ ]+)/$','view_assignment_feedback', name="view_assignment_feedback"), 
 )

@@ -1,4 +1,5 @@
 from django.shortcuts import render, render_to_response, HttpResponseRedirect, Http404, RequestContext
+from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
@@ -14,6 +15,8 @@ def signin(request):
 	"""
 	Allows registered users to sign in 
 	"""
+	if request.user.is_authenticated():
+		return HttpResponseRedirect(reverse('home'))
 	form = LoginForm(request.POST or None)
 	if form.is_valid():
 		username = form.cleaned_data['username']

@@ -2,15 +2,19 @@
 {% load crispy_forms_tags %}
 {% block course %}
 <div align="center"><h2>Submit Assignment</h2></div>
+{% if submitted %}
+	<div class="col-sm-12 col-sm-offset-3">
+		{% if not deadline_passed %}
+			<div class="alert alert-info" role="alert">You have already submitted assignment, You can re-submit if you want!</div>
+		{% else %}
+			<div class="alert alert-info" role="alert">You have submitted assignment!</div>
+		{% endif %}
+		{% if submitted_assignment %}
+			<a class="btn btn-md btn-success pull-right" href='{% url "view_assignment_feedback" course.id submitted_assignment.id %}' role="button">View Feedbacks</a>
+		{% endif %}
+	</div>
+{% endif %}
 {% if not deadline_passed %}
-	{% if submitted %}
-		<div class="col-sm-12 col-sm-offset-3">
-			<div class="alert alert-info" role="alert">You Have already submitte assignment, You can re-submit if you want!</div>
-			{% if submitted_assignment %}
-				<a class="btn btn-md btn-success pull-right" href='{% url "view_assignment_feedback" course.id submitted_assignment.id %}' role="button">View Feedbacks</a>
-			{% endif %}
-		</div>
-	{% endif %}
 	<div class="col-sm-12 col-sm-offset-3">
 		<form method='POST' action='' enctype="multipart/form-data"> {% csrf_token %}
 			{{ form|crispy }}
@@ -18,7 +22,9 @@
 		</form> 
 	</div>
 {% else %}
-	<div class="alert alert-warning" role="alert">Deadline Passed</div>
+	<div class="col-sm-12 col-sm-offset-3">
+		<div class="alert alert-warning" role="alert">Deadline for the assignment has passed!!</div>
+	</div>
 {% endif %}
 {% endblock %}
 
