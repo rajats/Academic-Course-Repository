@@ -187,6 +187,9 @@ def add_notice(request, id):
 			if form.is_valid():
 				title = form.cleaned_data['title']
 				content = form.cleaned_data['content']
+				if not title or not content:
+					messages.warning(request, 'Empty Notice!')
+					return HttpResponseRedirect(reverse('add_notice', kwargs={'id' : id}))
 				CourseNotice.objects.create(course=course, title=title, content=content ,timestamp=timezone.now())
 				messages.success(request, 'Your notice was added!')
 				return HttpResponseRedirect(reverse('view_course', kwargs={'id': course.id}))
@@ -206,6 +209,9 @@ def add_feedback(request, id):
 			form = CourseFeedbackForm(request.POST or None,)
 			if form.is_valid():
 				content = form.cleaned_data['content']
+				if not content:
+					messages.warning(request, 'Empty Feedback cannot be submitted!')
+					return HttpResponseRedirect(reverse('add_feedback', kwargs={'id' : id}))
 				CourseFeedback.objects.create(course=course, content=content ,timestamp=timezone.now())
 				messages.success(request, 'Your feedback was recorded!')
 				return HttpResponseRedirect(reverse('view_course', kwargs={'id': course.id}))
@@ -253,14 +259,15 @@ def submit_assignment(request, c_id, a_id):
 				form = StudentAssignmentForm(request.POST or None, request.FILES or None)
 				if form.is_valid():
 					assignment = form.cleaned_data['assignment']
-					if not submitted:
-						StudentAssignment.objects.create(course=course, student=reg_student , course_assignment=course_assignment ,assignment=assignment ,timestamp=timezone.now())
-					else:
-						submitted_assignment.assignment = assignment
-						submitted_assignment.timestamp = timezone.now()
-						submitted_assignment.save()
-					messages.success(request, 'Your assignment was submitted to the instructor!')
-					return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
+					if deadline > timezone.now():
+						if not submitted:
+							StudentAssignment.objects.create(course=course, student=reg_student , course_assignment=course_assignment ,assignment=assignment ,timestamp=timezone.now())
+						else:
+							submitted_assignment.assignment = assignment
+							submitted_assignment.timestamp = timezone.now()
+							submitted_assignment.save()
+						messages.success(request, 'Your assignment was submitted to the instructor!')
+						return HttpResponseRedirect(reverse('view_assignment', kwargs={'id': course.id})) 
 		else:
 			deadline_passed = True
 		return render_to_response("course/submitassignment.html", locals(), context_instance=RequestContext(request))
@@ -338,6 +345,9 @@ def view_assignment_feedback(request, c_id, sa_id):
 						form=StudentAssignmentFeedbackCommentsForm(request.POST)
 						if form.is_valid():
 							comment_text = form.cleaned_data['comment']
+							if not comment_text:
+								messages.warning(request, 'Empty comment cannot be added!')
+								return HttpResponseRedirect(reverse('view_assignment_feedback', kwargs={'c_id' : c_id, 'sa_id' : sa_id})) 
 							StudentAssignmentFeedbackComments.objects.create(student_assignment=student_assignment, commenter=request.user, comment=comment_text, timestamp=timezone.now())
 							messages.success(request, "Your comment was added")
 							return HttpResponseRedirect(reverse('view_assignment_feedback', kwargs={'c_id' : c_id, 'sa_id' : sa_id})) 
