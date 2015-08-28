@@ -251,6 +251,8 @@ def submit_assignment(request, c_id, a_id):
 		submitted = False
 		deadline_passed = False
 		deadline = course_assignment.deadline
+		deadline_date = deadline.date()     #to be used in javascript
+		deadline_time = deadline.time()     #to be used in javascript
 		if StudentAssignment.objects.filter(student=reg_student.id, course_assignment=course_assignment):
 			submitted = True
 			submitted_assignment = StudentAssignment.objects.get(student=reg_student, course_assignment=course_assignment)

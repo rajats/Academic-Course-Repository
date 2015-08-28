@@ -1,6 +1,6 @@
 {% extends "navbar.html" %}
 {% block content %}
-	<div class="col-sm-10 col-sm-offset-1">
+	<div class="col-sm-12">
 		<div class="panel panel-default">
 		  <div class="panel-heading">
 		    <h3 class="panel-title">{{ course.name }}</h3>
@@ -36,10 +36,10 @@
 	</div>
 <script>
 var url = window.location;
-$('ul.nav a[href="'+ url +'"]').parent().addClass('active');
-$('ul.nav a').filter(function() {
-    return this.href == url;
-}).parent().addClass('active');
+	$('ul.nav a[href="'+ url +'"]').parent().addClass('active');
+	$('ul.nav a').filter(function() {
+	    return this.href == url;
+	}).parent().addClass('active');
 </script>
 {% endblock %}
 

@@ -2,6 +2,11 @@
 {% load crispy_forms_tags %}
 {% block course %}
 <div align="center"><h2>Submit Assignment</h2></div>
+{% if not deadline_passed %}
+	<div class="col-sm-12 col-sm-offset-3">
+		<font size="5" color="green"><div id="countdown" align="right"></div></font>
+	</div>
+{% endif %}
 {% if submitted %}
 	<div class="col-sm-12 col-sm-offset-3">
 		{% if not deadline_passed %}
@@ -25,6 +30,40 @@
 	<div class="col-sm-12 col-sm-offset-3">
 		<div class="alert alert-warning" role="alert">Deadline for the assignment has passed!!</div>
 	</div>
+{% endif %}
+{% if not deadline_passed %}
+	<script>
+		var dtime = '{{ deadline_time|time:"H:i" }}'
+		var target_date = Date.parse('{{ deadline_date }}'+' '+dtime+' '+'GMT');
+		var days, hours, minutes, seconds;
+		var countdown = document.getElementById("countdown");
+		setInterval(function () {
+		    var current_date = new Date().getTime();
+		    var seconds_left = (target_date - current_date) / 1000;
+		    days = parseInt(seconds_left / 86400);
+		    seconds_left = seconds_left % 86400; 
+		    hours = parseInt(seconds_left / 3600);
+		    seconds_left = seconds_left % 3600; 
+		    minutes = parseInt(seconds_left / 60);
+		    seconds = parseInt(seconds_left % 60);
+		    var showdays=" days, "
+		    var showhours=" hours, "
+		    var showminutes=" minutes, "
+		    var showseconds=" seconds "
+		    if(days<=1)
+		    	showdays=" day, "
+		    if(hours<=1)
+		    	showhours=" hour, "
+		    if(minutes<=1)
+		    	showminutes=" minute, "
+		    if(seconds<=1)
+		    	showseconds=" second "
+		    if(days<=0 && hours<=0 && minutes<=0 && seconds<=0)
+		    	countdown.innerHTML="deadline passed";
+		    else
+		    	countdown.innerHTML=days+showdays+hours+showhours+minutes+showminutes+seconds+showseconds+" left";
+		}, 1000);
+	</script>
 {% endif %}
 {% endblock %}
 
