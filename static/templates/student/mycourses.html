@@ -9,10 +9,18 @@
 		  	{% if my_enrolled_courses %}
 			  	{% for course in my_enrolled_courses %}
 			  		<p>{{ course.show_name_type }}
-			  			<a class="btn btn-md btn-success pull-right" href='{% url "view_course" course.id %}' role="button">View Course</a>
-			  			<a class="btn btn-md btn-danger pull-right" href='{% url "leave_course" course.id %}' role="button">Leave</a>
-			  		</p>
-			  		<hr>
+		  				<div class="btn-group">
+						  <a class="btn btn-md btn-primary" href='{% url "view_course" course.id %}' role="button">View Course</a>
+						  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true">
+						    <span class="caret"></span>
+						    <span class="sr-only">Toggle Dropdown</span>
+						  </button>
+						  <ul class="dropdown-menu">
+						    <li><a href='{% url "leave_course" course.id %}'>Leave course</a></li>
+						  </ul>
+						</div>
+					</p>
+			  		<hr/>
 			  	{% endfor %}
 			{% else %}
 				<div class="alert alert-info" role="alert">No enrolled courses</div>
