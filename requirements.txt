@@ -19,3 +19,4 @@ PyYAML==3.11
 South==1.0.2
 SQLAlchemy==1.0.6
 static3==0.6.1
+whitenoise==2.0.2
