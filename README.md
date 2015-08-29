@@ -1,4 +1,6 @@
 # Academic-Course-Repository
+Visit the application live at: https://academicrepo.herokuapp.com
+
 Academic Course Repository is a system where students of a college( IIITM ) can enroll in a course and access all course related materials all at one place.
 This project is developed as part of my summer internship at ABV-IIITM Gwalior under the guidance of Dr. Rajendra Sahu.It is developed using django 1.7.4 and postgresql as database.
 
@@ -20,3 +22,5 @@ in form of file or comment.
 6) A active student enrolled in a course can view the assignment feedback from the instructor and can also discuss the feedback with the instructor in form of comments.
 
 *A add-on notification app will be added to notify students about new course material and to notify course instructor about submission.* 
+
+*Although this system is designed for a particular college it can easily be used for any educational institution.* 
